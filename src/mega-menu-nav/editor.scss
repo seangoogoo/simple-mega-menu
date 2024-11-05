@@ -1,0 +1,98 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+nav.block-editor-block-list__block.wp-block-simple-mega-menu-mega-menu-nav {
+	// outline: calc(var(--wp-admin-border-width-focus) / var(--wp-block-editor-iframe-zoom-out-scale, 1)) dashed var(--wp-admin-theme-color);
+	position: static;
+
+	> .block-editor-inner-blocks > .block-editor-block-list__layout {
+		display: flex;
+		gap: var(--mega-menu-gap, 0);
+		> .block-editor-block-list__block.wp-block.simple-mega-menu-item {
+			position: static;
+
+			> .block-editor-rich-text__editable.mega-menu-item__title.rich-text {
+				position: relative;
+				height: 100%;
+				display: flex;
+				align-items: center;
+				line-height: 1;
+			}
+			//* Selection effects
+			&.is-highlighted > .block-editor-rich-text__editable.mega-menu-item__title.rich-text:after,
+			&.is-highlighted~.is-multi-selected > .block-editor-rich-text__editable.mega-menu-item__title.rich-text:after,
+			&:not([contenteditable=true]):focus > .block-editor-rich-text__editable.mega-menu-item__title.rich-text:after,
+			&.is-selected > .block-editor-rich-text__editable.mega-menu-item__title.rich-text:after {
+				bottom: 0;
+				content: "";
+				left: 0;
+				outline-color: var(--wp-admin-theme-color);
+				outline-offset: calc((-1* var(--wp-admin-border-width-focus)) / var(--wp-block-editor-iframe-zoom-out-scale, 1));
+				outline-style: solid;
+				outline-width: calc(var(--wp-admin-border-width-focus) / var(--wp-block-editor-iframe-zoom-out-scale, 1));
+				pointer-events: none;
+				position: absolute;
+				right: 0;
+				top: 0;
+				z-index: 1;
+			}
+
+			> .block-editor-inner-blocks {
+				display: none;
+			}
+			&.is-selected,
+			&.has-child-selected {
+				> .block-editor-inner-blocks {
+					position: absolute;
+					z-index: 5;
+					display: block;
+					background-color: var(--wp--preset--color--base);
+
+					//* Selection effects
+					> .block-editor-block-list__layout > .block-editor-block-list__block.is-highlighted:after,
+					> .block-editor-block-list__layout > .block-editor-block-list__block.is-highlighted~.is-multi-selected:after,
+					> .block-editor-block-list__layout > .block-editor-block-list__block:not([contenteditable=true]):focus:after,
+					> .block-editor-block-list__layout > .block-editor-block-list__block.is-selected:after,
+					> .block-editor-block-list__layout > .block-editor-block-list__block.has-child-selected:after {
+						bottom: 0;
+						content: "";
+						left: 0;
+						outline-color: var(--wp-admin-theme-color);
+						outline-offset: calc((-1* var(--wp-admin-border-width-focus)) / var(--wp-block-editor-iframe-zoom-out-scale, 1));
+						outline-style: solid;
+						outline-width: calc(var(--wp-admin-border-width-focus) / var(--wp-block-editor-iframe-zoom-out-scale, 1));
+						pointer-events: none;
+						position: absolute;
+						right: 0;
+						top: 0;
+						z-index: 1;
+					}
+
+				}
+				&.has-custom-width {
+					> .block-editor-inner-blocks {
+						width: var(--mega-menu-width, 100%);
+						left: var(--mega-menu-left, 0);
+					}
+				}
+				&.has-viewport-width {
+					> .block-editor-inner-blocks {
+						left: var(--editor-content-left, 0);
+						width: var(--editor-content-width, 100%);
+					}
+				}
+			}
+		}
+	}
+}
+
+//* WordPress component hacks
+.block-editor-block-inspector .components-base-control {
+    margin-bottom: 0;
+}
+.block-editor-block-inspector .components-base-control:last-child {
+    margin-bottom: 0;
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "simple-mega-menu/mega-menu-nav",
+  "version": "0.1.0",
+  "title": "Mega Menu nav",
+  "category": "design",
+  "icon": "menu",
+  "description": "A custom navigation block with mega menu functionality.",
+  "ancestor": [
+    "core/template-part"
+  ],
+  "attributes": {
+    "uniqueId": {
+      "type": "string"
+    },
+    "blockSpacing": {
+      "type": "string",
+      "default": "0"
+    },
+    "megaMenuBreakpoint": {
+      "type": "string",
+      "default": "780px"
+    },
+    "burgerPadding": {
+      "type": "object",
+      "default": {
+        "top": "0",
+        "right": "6px",
+        "bottom": "0",
+        "left": "6px"
+      }
+    },
+    "templatePartArea": {
+      "type": "string",
+      "default": "header"
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "innerBlocks": true
+  },
+  "textdomain": "simple-mega-menu",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render-nav.php",
+  "viewScript": "file:./smm-nav-view.js"
+}

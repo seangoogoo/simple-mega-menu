@@ -1,0 +1,93 @@
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ */
+
+ // li element
+.simple-mega-menu-item {
+	--mm-transition-duration: 250ms;
+	.mega-menu-item__title {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+		// & + * {
+		// 	position: absolute;
+		// 	z-index: 10;
+		// 	display: none;
+		// 	opacity: 0;
+		// 	transition: display var(--mm-transition-duration) allow-discrete, opacity var(--mm-transition-duration) ease-in-out;
+		// }
+	}
+	// &:hover .mega-menu-item__title + * {
+	// 	display: block;
+	// 	opacity: 1;
+	// 	@starting-style {
+	// 		opacity: 0;
+	// 	}
+	// }
+	// &.has-viewport-width .mega-menu-item__title + * {
+	// 	width: 100vw;
+	// 	left: 0;
+	// }
+	// &.has-custom-width {
+	// 	position: relative;
+	// 	.mega-menu-item__title + * {
+	// 		width: var(--mega-menu-width);
+	// 		left: var(--mega-menu-left);
+	// 	}
+	// }
+}
+
+
+.simple-mega-menu {
+	&__nav {
+		background-color: #f8f8f8;
+		padding: 10px;
+	}
+
+	&__list {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.wp-block-navigation-item {
+		margin: 0 10px;
+
+		&__content {
+			color: #333;
+			text-decoration: none;
+			font-weight: bold;
+
+			&:hover {
+				color: #0073aa;
+			}
+		}
+	}
+
+	.wp-block-navigation-submenu {
+		position: relative;
+
+		&__toggle {
+			cursor: pointer;
+		}
+
+		&__content {
+			display: none;
+			position: absolute;
+			top: 100%;
+			left: 0;
+			background-color: #fff;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+			padding: 10px;
+			min-width: 200px;
+		}
+
+		&:hover .wp-block-navigation-submenu__content {
+			display: block;
+		}
+	}
+}

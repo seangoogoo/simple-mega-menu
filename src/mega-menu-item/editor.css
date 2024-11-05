@@ -1,0 +1,16 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+.wp-block-simple-mega-menu-navigation {
+  border: 1px dashed #ccc;
+  padding: 20px;
+  background-color: #f8f8f8;
+}
+.wp-block-simple-mega-menu-navigation h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: #333;
+}/*# sourceMappingURL=editor.css.map */
