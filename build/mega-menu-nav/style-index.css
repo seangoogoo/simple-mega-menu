@@ -7,18 +7,21 @@
  *
  * Replace them with your own styles or remove the file completely.
  */
-.wp-block-simple-mega-menu-mega-menu-nav.simple-mega-menu {
+nav.simple-mega-menu {
   position: static;
-  display: grid;
-  grid-template-columns: 1fr auto;
 }
-.wp-block-simple-mega-menu-mega-menu-nav.simple-mega-menu > .smm-burger__wrapper {
+nav.simple-mega-menu ul.simple-mega-menu__list {
+  display: flex;
+  list-style: none;
+  padding-inline-start: 0;
+}
+nav.simple-mega-menu > .smm-burger__wrapper {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   padding: var(--burger-padding);
 }
-.wp-block-simple-mega-menu-mega-menu-nav.simple-mega-menu > .smm-burger__wrapper label#burger-icon {
+nav.simple-mega-menu > .smm-burger__wrapper label.burger-icon {
   --bg-color: black;
   --slice-height: 2px;
   --transition-speed: 250ms;
@@ -31,7 +34,7 @@
   transition: all var(--transition-speed) ease;
   cursor: pointer;
 }
-.wp-block-simple-mega-menu-mega-menu-nav.simple-mega-menu > .smm-burger__wrapper label#burger-icon:before, .wp-block-simple-mega-menu-mega-menu-nav.simple-mega-menu > .smm-burger__wrapper label#burger-icon:after {
+nav.simple-mega-menu > .smm-burger__wrapper label.burger-icon:before, nav.simple-mega-menu > .smm-burger__wrapper label.burger-icon:after {
   content: "";
   position: absolute;
   display: block;
@@ -42,13 +45,13 @@
   transform-origin: center center;
   transition: all var(--transition-speed) ease;
 }
-.wp-block-simple-mega-menu-mega-menu-nav.simple-mega-menu > .smm-burger__wrapper label#burger-icon:before {
+nav.simple-mega-menu > .smm-burger__wrapper label.burger-icon:before {
   top: 0;
 }
-.wp-block-simple-mega-menu-mega-menu-nav.simple-mega-menu > .smm-burger__wrapper label#burger-icon:after {
+nav.simple-mega-menu > .smm-burger__wrapper label.burger-icon:after {
   top: calc(100% - var(--slice-height));
 }
-.wp-block-simple-mega-menu-mega-menu-nav.simple-mega-menu > .smm-burger__wrapper label#burger-icon #burger-input {
+nav.simple-mega-menu > .smm-burger__wrapper label.burger-icon [id^=burger-input-] {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
@@ -66,20 +69,24 @@
   transform-origin: center center;
   transition: all var(--transition-speed) ease;
 }
-.wp-block-simple-mega-menu-mega-menu-nav.simple-mega-menu > .smm-burger__wrapper label#burger-icon:has(#burger-input:checked) {
+nav.simple-mega-menu > .smm-burger__wrapper label.burger-icon:has([id^=burger-input-]:checked) {
   transform: rotate(90deg);
 }
-.wp-block-simple-mega-menu-mega-menu-nav.simple-mega-menu > .smm-burger__wrapper label#burger-icon:has(#burger-input:checked):before {
+nav.simple-mega-menu > .smm-burger__wrapper label.burger-icon:has([id^=burger-input-]:checked):before {
   transform: rotate(225deg);
   top: calc(50% - var(--slice-height) / 2);
 }
-.wp-block-simple-mega-menu-mega-menu-nav.simple-mega-menu > .smm-burger__wrapper label#burger-icon:has(#burger-input:checked):after {
+nav.simple-mega-menu > .smm-burger__wrapper label.burger-icon:has([id^=burger-input-]:checked):after {
   transform: rotate(-225deg);
   top: calc(50% - var(--slice-height) / 2);
 }
-.wp-block-simple-mega-menu-mega-menu-nav.simple-mega-menu > .smm-burger__wrapper label#burger-icon:has(#burger-input:checked) #burger-input {
+nav.simple-mega-menu > .smm-burger__wrapper label.burger-icon:has([id^=burger-input-]:checked) [id^=burger-input-] {
   width: var(--slice-height);
   left: calc(50% - var(--slice-height) / 2);
+}
+
+header:has(nav.simple-mega-menu) :where(.wp-block-group.wp-block-group-is-layout-constrained) {
+  position: static !important;
 }
 
 /*# sourceMappingURL=style-index.css.map*/

@@ -20,8 +20,8 @@ export default function save({ attributes }) {
                 <InnerBlocks.Content />
             </ul>
             <div className="smm-burger__wrapper">
-                <label id="burger-icon" htmlFor="burger-input">
-                    <input type="checkbox" id="burger-input" />
+                <label className="burger-icon" htmlFor={`burger-input-${uniqueId}`}>
+                    <input type="checkbox" id={`burger-input-${uniqueId}`} />
                 </label>
             </div>
         </nav>

@@ -49,5 +49,5 @@
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
   "render": "file:./render-nav.php",
-  "viewScript": "file:./smm-nav-view.js"
+  "viewScript": "file:./view.js"
 }

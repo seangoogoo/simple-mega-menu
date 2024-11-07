@@ -11,7 +11,7 @@ import { __ } from '@wordpress/i18n'
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useState, useEffect } from '@wordpress/element'
+import { useState, useEffect, useRef } from '@wordpress/element'
 import {
     __experimentalToolsPanel as ToolsPanel,
     __experimentalToolsPanelItem as ToolsPanelItem,
@@ -38,7 +38,8 @@ import {
  */
 import './editor.scss'
 
-const ALLOWED_BLOCKS = ['simple-mega-menu/mega-menu-item', 'core/navigation-link', 'core/buttons', ['core/search'], ['core/social-links'], ['core/spacer'], ['core/home-link'], ['core/site-title'], ['core/site-logo']]
+// const ALLOWED_BLOCKS = ['simple-mega-menu/mega-menu-item', 'core/navigation-link', 'core/buttons', ['core/search'], ['core/social-links'], ['core/spacer'], ['core/home-link'], ['core/site-title'], ['core/site-logo']]
+const ALLOWED_BLOCKS = ['simple-mega-menu/mega-menu-item', 'core/navigation-link', 'core/buttons', 'core/search', 'core/social-links', 'core/home-link', 'core/site-title', 'core/site-logo']
 const TEMPLATE = [
     ['simple-mega-menu/mega-menu-item'],
     ['simple-mega-menu/mega-menu-item'],
@@ -46,10 +47,7 @@ const TEMPLATE = [
 		className: 'simple-mega-menu-buttons'
 	}, [
 		['core/button', {
-			text: 'Button 1'
-		}],
-		['core/button', {
-			text: 'Button 2'
+			text: 'Bouton'
 		}]
 	]]
 ]
@@ -66,9 +64,12 @@ export default function Edit({attributes, setAttributes}) {
 	const { uniqueId, blockSpacing, megaMenuBreakpoint, burgerPadding } = attributes
     const [isCustom, setIsCustom] = useState(false)
     const [customUnit, setCustomUnit] = useState('rem')
+    const [isMobile, setIsMobile] = useState(false)
+    const blockRef = useRef(null)
 
 	const blockProps = useBlockProps({
 		className: 'simple-mega-menu',
+        ref: blockRef,
         style: {
             '--mega-menu-gap': blockSpacing || '0',
             '--mega-menu-breakpoint': megaMenuBreakpoint || '780px',
@@ -94,13 +95,37 @@ export default function Edit({attributes, setAttributes}) {
     }
     const setUniqueId = () => Math.random().toString(36).substring(2, 11)
 
-    // Generate unique ID on mount if not already set
+    //* Generate unique ID on mount if not already set
     useEffect(() => {
         if (!uniqueId) {
             const newId = `smm-${setUniqueId()}-${setUniqueId()}`
             setAttributes({ uniqueId: newId })
         }
-    }, []) // Empty dependency array means this runs once on mount
+
+        //* Add resize observer effect
+        const navElement = blockRef.current
+        if (!navElement) return
+        const header =  navElement.closest('header') ||
+                        navElement.querySelector('.site-header') ||
+                        navElement.querySelector('#masthead')
+        if (!header) return
+        const resizeObserver = new ResizeObserver(entries => {
+            const breakpointValue = parseInt(megaMenuBreakpoint) || 780
+            const isMobileView = entries[0].contentRect.width <= breakpointValue
+            setIsMobile(isMobileView)
+            console.log("🚀 navElement:", isMobileView, navElement)
+            if (isMobileView) {
+                navElement.classList.add('is-mobile')
+            } else {
+                navElement.classList.remove('is-mobile')
+            }
+        })
+        resizeObserver.observe(header)
+        //* Cleanup
+        return () => {
+            resizeObserver.disconnect()
+        }
+    }, [megaMenuBreakpoint]) //* Re-run effect when breakpoint changes
 
 	return (
         <>
@@ -207,7 +232,7 @@ export default function Edit({attributes, setAttributes}) {
                                 <Button
                                     icon={isCustom ? "editor-table" : "edit"}
                                     label={__('Définir une taille personnalisée', 'mega-menu-nav')}
-                                    isSmall
+                                    size="small"
                                     onClick={() => setIsCustom(!isCustom)}
                                     aria-pressed={isCustom}
                                 />
@@ -223,11 +248,13 @@ export default function Edit({attributes, setAttributes}) {
 						template={TEMPLATE}
 				/>
 				{/* wrapper ul end in the front*/}
-                <div className="smm-burger__wrapper">
-                    <label id="burger-icon" htmlFor="burger-input">
-                        <input type="checkbox" id="burger-input" />
-                    </label>
-                </div>
+                {isMobile && (
+                    <div className="smm-burger__wrapper">
+                        <label className="burger-icon" htmlFor={`burger-input-${uniqueId}`}>
+                            <input type="checkbox" id={`burger-input-${uniqueId}`} />
+                        </label>
+                    </div>
+                )}
 			</nav>
         </>
 	)

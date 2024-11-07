@@ -48,13 +48,13 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
-const ALLOWED_BLOCKS = ['simple-mega-menu/mega-menu-item', 'core/navigation-link', 'core/buttons', ['core/search'], ['core/social-links'], ['core/spacer'], ['core/home-link'], ['core/site-title'], ['core/site-logo']];
+// const ALLOWED_BLOCKS = ['simple-mega-menu/mega-menu-item', 'core/navigation-link', 'core/buttons', ['core/search'], ['core/social-links'], ['core/spacer'], ['core/home-link'], ['core/site-title'], ['core/site-logo']]
+
+const ALLOWED_BLOCKS = ['simple-mega-menu/mega-menu-item', 'core/navigation-link', 'core/buttons', 'core/search', 'core/social-links', 'core/home-link', 'core/site-title', 'core/site-logo'];
 const TEMPLATE = [['simple-mega-menu/mega-menu-item'], ['simple-mega-menu/mega-menu-item'], ['core/buttons', {
   className: 'simple-mega-menu-buttons'
 }, [['core/button', {
-  text: 'Button 1'
-}], ['core/button', {
-  text: 'Button 2'
+  text: 'Bouton'
 }]]]];
 
 /**
@@ -77,8 +77,11 @@ function Edit({
   } = attributes;
   const [isCustom, setIsCustom] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const [customUnit, setCustomUnit] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)('rem');
+  const [isMobile, setIsMobile] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const blockRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useRef)(null);
   const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps)({
     className: 'simple-mega-menu',
+    ref: blockRef,
     style: {
       '--mega-menu-gap': blockSpacing || '0',
       '--mega-menu-breakpoint': megaMenuBreakpoint || '780px',
@@ -111,7 +114,7 @@ function Edit({
   };
   const setUniqueId = () => Math.random().toString(36).substring(2, 11);
 
-  // Generate unique ID on mount if not already set
+  //* Generate unique ID on mount if not already set
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     if (!uniqueId) {
       const newId = `smm-${setUniqueId()}-${setUniqueId()}`;
@@ -119,7 +122,29 @@ function Edit({
         uniqueId: newId
       });
     }
-  }, []); // Empty dependency array means this runs once on mount
+
+    //* Add resize observer effect
+    const navElement = blockRef.current;
+    if (!navElement) return;
+    const header = navElement.closest('header') || navElement.querySelector('.site-header') || navElement.querySelector('#masthead');
+    if (!header) return;
+    const resizeObserver = new ResizeObserver(entries => {
+      const breakpointValue = parseInt(megaMenuBreakpoint) || 780;
+      const isMobileView = entries[0].contentRect.width <= breakpointValue;
+      setIsMobile(isMobileView);
+      console.log("🚀 navElement:", isMobileView, navElement);
+      if (isMobileView) {
+        navElement.classList.add('is-mobile');
+      } else {
+        navElement.classList.remove('is-mobile');
+      }
+    });
+    resizeObserver.observe(header);
+    //* Cleanup
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [megaMenuBreakpoint]); //* Re-run effect when breakpoint changes
 
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.InspectorControls, {
@@ -252,7 +277,7 @@ function Edit({
               children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
                 icon: isCustom ? "editor-table" : "edit",
                 label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Définir une taille personnalisée', 'mega-menu-nav'),
-                isSmall: true,
+                size: "small",
                 onClick: () => setIsCustom(!isCustom),
                 "aria-pressed": isCustom
               })
@@ -265,14 +290,14 @@ function Edit({
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.InnerBlocks, {
         allowedBlocks: ALLOWED_BLOCKS,
         template: TEMPLATE
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
+      }), isMobile && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
         className: "smm-burger__wrapper",
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("label", {
-          id: "burger-icon",
-          htmlFor: "burger-input",
+          className: "burger-icon",
+          htmlFor: `burger-input-${uniqueId}`,
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("input", {
             type: "checkbox",
-            id: "burger-input"
+            id: `burger-input-${uniqueId}`
           })
         })
       })]
@@ -376,11 +401,11 @@ function save({
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
       className: "smm-burger__wrapper",
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("label", {
-        id: "burger-icon",
-        htmlFor: "burger-input",
+        className: "burger-icon",
+        htmlFor: `burger-input-${uniqueId}`,
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
           type: "checkbox",
-          id: "burger-input"
+          id: `burger-input-${uniqueId}`
         })
       })
     })]
@@ -479,7 +504,7 @@ module.exports = window["wp"]["i18n"];
   \**************************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"simple-mega-menu/mega-menu-nav","version":"0.1.0","title":"Mega Menu nav","category":"design","icon":"menu","description":"A custom navigation block with mega menu functionality.","ancestor":["core/template-part"],"attributes":{"uniqueId":{"type":"string"},"blockSpacing":{"type":"string","default":"0"},"megaMenuBreakpoint":{"type":"string","default":"780px"},"burgerPadding":{"type":"object","default":{"top":"0","right":"6px","bottom":"0","left":"6px"}},"templatePartArea":{"type":"string","default":"header"}},"supports":{"html":false,"align":["wide","full"],"innerBlocks":true},"textdomain":"simple-mega-menu","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render-nav.php","viewScript":"file:./smm-nav-view.js"}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"simple-mega-menu/mega-menu-nav","version":"0.1.0","title":"Mega Menu nav","category":"design","icon":"menu","description":"A custom navigation block with mega menu functionality.","ancestor":["core/template-part"],"attributes":{"uniqueId":{"type":"string"},"blockSpacing":{"type":"string","default":"0"},"megaMenuBreakpoint":{"type":"string","default":"780px"},"burgerPadding":{"type":"object","default":{"top":"0","right":"6px","bottom":"0","left":"6px"}},"templatePartArea":{"type":"string","default":"header"}},"supports":{"html":false,"align":["wide","full"],"innerBlocks":true},"textdomain":"simple-mega-menu","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render-nav.php","viewScript":"file:./view.js"}');
 
 /***/ })
 

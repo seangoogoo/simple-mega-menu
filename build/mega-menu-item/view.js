@@ -25,7 +25,7 @@
  */
 
 /* eslint-disable no-console */
-console.log('Hello World! (from simple-mega-menu-item block)');
+console.log('Hello World! (from smm-item block)');
 /* eslint-enable no-console */
 
 document.addEventListener('DOMContentLoaded', function () {

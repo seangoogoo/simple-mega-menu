@@ -134,7 +134,7 @@ export default function Edit({attributes, setAttributes}) {
     }, []) //* Empty dependency array means this effect runs once on mount
 
 	const blockProps = useBlockProps({
-    className: `simple-mega-menu-item ${
+    className: `smm-item ${
         megaMenuWidth === '100vw'
             ? 'has-viewport-width'
             : megaMenuWidth?.includes('px')

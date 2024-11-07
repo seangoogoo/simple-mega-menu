@@ -3,7 +3,7 @@ import { InnerBlocks, useBlockProps, RichText } from '@wordpress/block-editor'
 export default function save({ attributes }) {
   const { menuName, megaMenuWidth, megaMenuLeft, titlePadding } = attributes
   const blockProps = useBlockProps.save({
-    className: `simple-mega-menu-item ${
+    className: `smm-item ${
         megaMenuWidth === '100vw'
             ? 'has-viewport-width'
             : megaMenuWidth?.includes('px')
@@ -22,15 +22,8 @@ export default function save({ attributes }) {
   }
 
   return (
-    <li {...blockProps}>
-      <RichText.Content
-        tagName="div"
-        className="mega-menu-item__title"
-        value={menuName || ''}
-        multiline={false}
-        style={titleStyle}
-      />
-      <InnerBlocks.Content />
-    </li>
+    <div {...useBlockProps.save()}>
+        <InnerBlocks.Content />
+    </div>
   )
 }
