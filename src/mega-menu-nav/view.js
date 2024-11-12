@@ -69,20 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const smmBreakpoint = smmNavStyle.getPropertyValue('--mega-menu-breakpoint').trim()
             let isMobileView = false
 
-            console.log("🚀 ~ breakpointValue:", parseInt(smmBreakpoint), smmBreakpoint)
-
-
             //* Add a resize observer to the header element
             const navResizeObserver = new ResizeObserver(entries => {
-
                 document.documentElement.style.setProperty('--smm-nav-height', Math.round(entries[0].contentRect.height) + 'px')
-
-                console.log("🚀 ~ header:", document.documentElement, entries[0].contentRect, entries[0].contentRect.height)
-
                 isMobileView = entries[0].contentRect.width <= parseInt(smmBreakpoint)
-                console.log("🚀 ~ isMobileView:", isMobileView)
             })
-
             navResizeObserver.observe(header)
         })
     }
