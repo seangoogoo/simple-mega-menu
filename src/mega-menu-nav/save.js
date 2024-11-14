@@ -1,16 +1,19 @@
 import { InnerBlocks, useBlockProps } from '@wordpress/block-editor'
 
 export default function save({ attributes }) {
-    const { uniqueId, blockSpacing, megaMenuBreakpoint, burgerPadding } = attributes
+    const { uniqueId, blockSpacing, megaMenuBreakpoint, burgerPadding, autoclose } = attributes
     const blockProps = useBlockProps.save({
         id: uniqueId,
         className: 'simple-mega-menu',
+        'data-autoclose': autoclose,
         style: {
             '--mega-menu-gap': blockSpacing || '0',
             '--mega-menu-breakpoint': megaMenuBreakpoint || '780px',
             '--burger-padding': burgerPadding ?
                 `${burgerPadding.top} ${burgerPadding.right} ${burgerPadding.bottom} ${burgerPadding.left}` :
-                '0'
+                '0',
+            '--arrow-size': attributes.arrowSize || '4px',
+            '--arrow-thickness': attributes.arrowThickness || '1.5px'
         }
     })
 

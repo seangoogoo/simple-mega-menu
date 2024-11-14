@@ -3,15 +3,17 @@
  * and in the editor.
  */
 
- // li element
+ //* li element
 .smm-item {
 	display: block;
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
-
+	//* Label
 	.mega-menu-item__title {
+		--arrow-border: var(--arrow-thickness) solid var(--wp--preset--color--contrast);
 		display: flex;
+		align-items: center;
 		cursor: pointer;
 		position: relative;
 		input[type="checkbox"] {
@@ -24,30 +26,15 @@
 			appearance: none;
 			visibility: hidden;
 		}
-		// & + * {
-		// 	position: absolute;
-		// 	z-index: 10;
-		// 	display: none;
-		// 	opacity: 0;
-		// 	transition: display var(--mm-transition-duration) allow-discrete, opacity var(--mm-transition-duration) ease-in-out;
-		// }
+		&:after {
+			content: '';
+			width: var(--arrow-size);
+			height: var(--arrow-size);
+			border-right: var(--arrow-border);
+			border-bottom: var(--arrow-border);
+			margin-left: 0.5rem;
+			transform: rotate(45deg) translate(calc(var(--arrow-size) / -6), calc(var(--arrow-size) / -6));
+			transition: all 250ms ease;
+		}
 	}
-	// &:hover .mega-menu-item__title + * {
-	// 	display: block;
-	// 	opacity: 1;
-	// 	@starting-style {
-	// 		opacity: 0;
-	// 	}
-	// }
-	// &.has-viewport-width .mega-menu-item__title + * {
-	// 	width: 100vw;
-	// 	left: 0;
-	// }
-	// &.has-custom-width {
-	// 	position: relative;
-	// 	.mega-menu-item__title + * {
-	// 		width: var(--mega-menu-width);
-	// 		left: var(--mega-menu-left);
-	// 	}
-	// }
 }

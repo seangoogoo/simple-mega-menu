@@ -22,7 +22,8 @@ import {
     Flex,
     FlexItem,
     SelectControl,
-    PanelBody
+    PanelBody,
+    ToggleControl
 } from '@wordpress/components'
 import {
     InnerBlocks,
@@ -38,8 +39,7 @@ import {
  */
 import './editor.scss'
 
-// const ALLOWED_BLOCKS = ['simple-mega-menu/mega-menu-item', 'core/navigation-link', 'core/buttons', ['core/search'], ['core/social-links'], ['core/spacer'], ['core/home-link'], ['core/site-title'], ['core/site-logo']]
-const ALLOWED_BLOCKS = ['simple-mega-menu/mega-menu-item', 'core/navigation-link', 'core/buttons', 'core/search', 'core/social-links', 'core/home-link', 'core/site-title', 'core/site-logo']
+const ALLOWED_BLOCKS = ['simple-mega-menu/mega-menu-item', 'core/navigation-link', 'core/buttons', 'core/search', 'core/social-links', 'core/home-link', 'core/site-title', 'core/site-logo', 'core/shortcode']
 const TEMPLATE = [
     ['simple-mega-menu/mega-menu-item'],
     ['simple-mega-menu/mega-menu-item'],
@@ -61,7 +61,7 @@ const TEMPLATE = [
  * @return {Element} Element to render.
  */
 export default function Edit({attributes, setAttributes}) {
-	const { uniqueId, blockSpacing, megaMenuBreakpoint, burgerPadding } = attributes
+	const { uniqueId, blockSpacing, megaMenuBreakpoint, burgerPadding, autoclose } = attributes
     const [isCustom, setIsCustom] = useState(false)
     const [customUnit, setCustomUnit] = useState('rem')
     const [isMobile, setIsMobile] = useState(false)
@@ -70,12 +70,15 @@ export default function Edit({attributes, setAttributes}) {
 	const blockProps = useBlockProps({
 		className: 'simple-mega-menu',
         ref: blockRef,
+        'data-autoclose': autoclose,
         style: {
             '--mega-menu-gap': blockSpacing || '0',
             '--mega-menu-breakpoint': megaMenuBreakpoint || '780px',
             '--burger-padding': burgerPadding ?
                 `${burgerPadding.top} ${burgerPadding.right} ${burgerPadding.bottom} ${burgerPadding.left}` :
-                '0'
+                '0',
+            '--arrow-size': attributes.arrowSize || '4px',
+            '--arrow-thickness': attributes.arrowThickness || '1.5px'
         }
 	})
 
@@ -139,6 +142,52 @@ export default function Edit({attributes, setAttributes}) {
                         help={__('La largeur de la fenêtre d\'affichage à laquelle le Mega Menu passe en vue mobile (par exemple 780 px)', 'mega-menu-nav')}
                         value={megaMenuBreakpoint}
                         onChange={(value) => setAttributes({ megaMenuBreakpoint: value })}
+                    />
+                </PanelBody>
+                <PanelBody title={__('Custom CSS', 'simple-mega-menu')}>
+                    <TextControl
+                        label={__('CSS pour Desktop', 'simple-mega-menu')}
+                        help={__('Par rapport au répertoire du thème, par exemple : assets/css/mega-menu-desktop.css', 'simple-mega-menu')}
+                        value={attributes.desktopCssPath}
+                        onChange={(value) => setAttributes({ desktopCssPath: value })}
+                    />
+                    <TextControl
+                        label={__('CSS pour Mobile', 'simple-mega-menu')}
+                        help={__('Par rapport au répertoire du thème, par exemple : assets/css/mega-menu-mobile.css', 'simple-mega-menu')}
+                        value={attributes.mobileCssPath}
+                        onChange={(value) => setAttributes({ mobileCssPath: value })}
+                    />
+                </PanelBody>
+                <PanelBody
+                    title={__('Icône de flèche', 'simple-mega-menu')}
+                    initialOpen={false}
+                >
+                    <RangeControl
+                        label={__('Dimension de l\'icône', 'simple-mega-menu')}
+                        value={parseInt(attributes.arrowSize) || 4}
+                        onChange={(value) => setAttributes({ arrowSize: value ? `${value}px` : '4px' })}
+                        min={2}
+                        max={12}
+                        step={1}
+                    />
+                    <RangeControl
+                        label={__('Épaisseur de l\'icône', 'simple-mega-menu')}
+                        value={parseFloat(attributes.arrowThickness) || 1.5}
+                        onChange={(value) => setAttributes({ arrowThickness: value ? `${value}px` : '1.5px' })}
+                        min={0.5}
+                        max={3}
+                        step={0.5}
+                    />
+                </PanelBody>
+                <PanelBody
+                    title={__('Paramètre de menu mobile', 'simple-mega-menu')}
+                    initialOpen={true}
+                >
+                    <ToggleControl
+                        label={__('Fermer automatiquement', 'simple-mega-menu')}
+                        help={__('Fermer automatiquement les autres menus lors de l\'ouverture d\'un menu en mode mobile', 'simple-mega-menu')}
+                        checked={autoclose}
+                        onChange={(value) => setAttributes({ autoclose: value })}
                     />
                 </PanelBody>
             </InspectorControls>

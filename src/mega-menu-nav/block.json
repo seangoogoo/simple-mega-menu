@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "simple-mega-menu/mega-menu-nav",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"title": "Mega Menu nav",
 	"category": "design",
 	"icon": "menu",
@@ -29,6 +29,26 @@
 				"left": "6px"
 			}
 		},
+        "desktopCssPath": {
+            "type": "string",
+            "default": ""
+        },
+        "mobileCssPath": {
+            "type": "string",
+            "default": ""
+        },
+		"arrowSize": {
+            "type": "string",
+            "default": "4px"
+        },
+		"arrowThickness": {
+            "type": "string",
+            "default": "1.5px"
+        },
+        "autoclose": {
+            "type": "boolean",
+            "default": false
+        },
         "templatePartArea": {
             "type": "string",
             "default": "header"

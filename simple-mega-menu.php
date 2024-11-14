@@ -26,14 +26,29 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function render_mega_menu_style($attributes) {
 
-	// Get the breakpoint value or fallback to default
+	//* Get the breakpoint value or fallback to default
 	$breakpoint = isset($attributes['megaMenuBreakpoint']) ? $attributes['megaMenuBreakpoint'] : '780px';
-	// Generate a unique ID
-	$unique_id = $attributes['uniqueId'];
 
-	// Generate the dynamic CSS
+	//* Generate the dynamic CSS
 	$safe_breakpoint = esc_attr($breakpoint);
-	$safe_id = esc_attr($unique_id);
+	$safe_id = esc_attr($attributes['uniqueId']);
+
+    // Get custom CSS content if paths are provided
+    $desktop_css = '';
+    $mobile_css = '';
+    if (!empty($attributes['desktopCssPath'])) {
+        $desktop_file = get_template_directory() . '/' . $attributes['desktopCssPath'];
+        if (file_exists($desktop_file)) {
+            $desktop_css = file_get_contents($desktop_file);
+        }
+    }
+
+    if (!empty($attributes['mobileCssPath'])) {
+        $mobile_file = get_template_directory() . '/' . $attributes['mobileCssPath'];
+        if (file_exists($mobile_file)) {
+            $mobile_css = file_get_contents($mobile_file);
+        }
+    }
 
 	$dynamic_css = sprintf(
 		'<style>
@@ -44,9 +59,6 @@ function render_mega_menu_style($attributes) {
 					display: none;
 				}
 				/* UL > LI */
-				#%2$s .simple-mega-menu__list .smm-item {
-					--mm-transition-duration: 250ms;
-				}
 				#%2$s .simple-mega-menu__list > li[class^="smm-"]:not(.smm-item) {
 					display: flex;
 					align-items: center;
@@ -54,18 +66,17 @@ function render_mega_menu_style($attributes) {
 				#%2$s .simple-mega-menu__list .smm-item .mega-menu-item__title {
 					height: 100%%;
 					justify-content: center;
-					align-items: center;
+				}
+				#%2$s .simple-mega-menu__list .smm-item:hover .mega-menu-item__title:after {
+				transform: rotate(-135deg) translate(calc(var(--arrow-size) / -4), calc(var(--arrow-size) / -4));
 				}
 				#%2$s .simple-mega-menu__list .smm-item .mega-menu-item__title + * {
 					position: absolute;
 					z-index: 10;
 					display: none;
-					opacity: 0;
-					transition: display var(--mm-transition-duration) allow-discrete, opacity var(--mm-transition-duration) ease-in-out;
 				}
 				#%2$s .simple-mega-menu__list .smm-item:hover .mega-menu-item__title + * {
 					display: block;
-					opacity: 1;
 				}
 				#%2$s .simple-mega-menu__list .smm-item.has-viewport-width .mega-menu-item__title + * {
 					width: calc(100vw - var(--scrollbar-width, 0px));
@@ -78,13 +89,9 @@ function render_mega_menu_style($attributes) {
 						left: var(--mega-menu-left);
 					}
 				}
-			}
-			@starting-style {
-				@media (min-width: calc(%1$s + 1px)) {
-					#%2$s .simple-mega-menu__list .smm-item:hover .mega-menu-item__title + * {
-						opacity: 0;
-					}
-				}
+
+				/* Custom desktop styles */
+                %3$s
 			}
 
 			/* Mobile */
@@ -102,7 +109,7 @@ function render_mega_menu_style($attributes) {
 					padding-inline: var(--wp--style--root--padding-right, 1rem) var(--wp--style--root--padding-left, 1rem);
 					flex-direction: column;
 					align-items: center;
-					overflow-y: scroll;
+					overflow-y: auto;
 				}
 				#%2$s .simple-mega-menu__list li .mega-menu-item__title {
 					height: auto;
@@ -110,18 +117,11 @@ function render_mega_menu_style($attributes) {
 				#%2$s .simple-mega-menu__list .smm-item .mega-menu-item__title:has(input[type="checkbox"]:not(:checked)) + * {
 					display: none;
 				}
+				#%2$s .simple-mega-menu__list .smm-item .mega-menu-item__title:has(input[type="checkbox"]:checked):after {
+					transform: rotate(-135deg) translate(calc(var(--arrow-size) / -4), calc(var(--arrow-size) / -4));
+				}
 				#%2$s .simple-mega-menu__list .smm-item .mega-menu-item__title:has(input[type="checkbox"]:checked) + * {
 					display: block;
-				}
-				#%2$s .simple-mega-menu__list .smm-item .mega-menu-item__title + * img {
-					display: none;
-				}
-				#%2$s .simple-mega-menu__list .smm-item .mega-menu-item__title + * ul {
-					list-style: none;
-					padding-left: 0;
-				}
-				header:has(#%2$s) .wp-block-site-logo {
-					z-index: 100;
 				}
 				body:has(#%2$s .smm-burger__wrapper input[type="checkbox"]:checked) {
 					overflow: hidden;
@@ -131,13 +131,16 @@ function render_mega_menu_style($attributes) {
 				}
 				#%2$s:has(.smm-burger__wrapper input[type="checkbox"]:checked) .simple-mega-menu__list {
 					display: block;
-
 				}
 
+				/* Custom mobile styles */
+                %4$s
 			}
 		</style>'."\n",
 		$safe_breakpoint,
-		$safe_id
+		$safe_id,
+        wp_strip_all_tags($desktop_css),
+        wp_strip_all_tags($mobile_css)
 	);
 	return $dynamic_css;
 }
@@ -152,56 +155,48 @@ function render_mega_menu_nav($attributes, $content) {
 
     $xpath = new DOMXPath($dom);
 
-    //* First, find the main UL element
+    // First, find the main UL element
     $mainUl = $xpath->query("//ul[@class='simple-mega-menu__list']")->item(0);
 
-    //* Special handling for navigation links first
+    // Special handling for navigation links first
     $navLinks = $xpath->query("//li[contains(@class, 'wp-block-navigation-link')]");
     if ($navLinks) {
         foreach ($navLinks as $navLink) {
             if ($navLink instanceof DOMElement) {
-                $navLink->setAttribute('class', 'smm-navigation-link-wrapper');
+                $existingClasses = $navLink->getAttribute('class');
+                $navLink->setAttribute('class', 'smm-navigation-link-wrapper ' . $existingClasses);
             }
         }
     }
 
-    //* Map of block types to their possible HTML elements (excluding navigation links)
-    $block_mappings = [
-        'wp-block-buttons' => ['div'],
-        'wp-block-search' => ['form'],
-        'wp-block-social-links' => ['ul'],
-        'wp-block-home-link' => ['a'],
-        'wp-block-site-title' => ['h1'],
-        'wp-block-site-logo' => ['div']
-    ];
+    // Find all direct children of the main UL that aren't li.smm-item elements
+    $nonPluginItems = $xpath->query("//ul[@class='simple-mega-menu__list']/node()[not(self::li[contains(@class, 'smm-item')]) and not(self::text()[normalize-space()=''])]");
 
-    //* Process each block type
-    foreach ($block_mappings as $block_class => $elements) {
-        foreach ($elements as $element) {
-            //* Build XPath query for this specific block type
-            $query = "//{$element}[contains(@class, '{$block_class}') and not(ancestor::li[contains(@class, 'smm-')])]";
-            $blocks = $xpath->query($query);
-
-            if ($blocks) {
-                foreach ($blocks as $block) {
-                    //* Create new li element
-                    $li = $dom->createElement('li');
-                    $li->setAttribute('class', 'smm-' . str_replace('wp-block-', '', $block_class) . '-wrapper');
-
-                    //* Wrap block in li and append to main UL
-                    $block->parentNode->replaceChild($li, $block);
-                    $li->appendChild($block);
-
-                    //* If the block is not already in the main UL, move it there
-                    if ($li->parentNode !== $mainUl) {
-                        $mainUl->appendChild($li);
-                    }
-                }
+    if ($nonPluginItems->length > 0) {
+        foreach ($nonPluginItems as $node) {
+            // Skip if it's just whitespace
+            if ($node->nodeType === XML_TEXT_NODE && trim($node->nodeValue) === '') {
+                continue;
             }
+
+            // Skip if it's already a properly wrapped navigation link
+            if ($node instanceof DOMElement && $node->tagName === 'li' && strpos($node->getAttribute('class'), 'smm-navigation-link-wrapper') !== false) {
+                continue;
+            }
+
+            // Create new wrapper li
+            $wrapper = $dom->createElement('li');
+            $wrapper->setAttribute('class', 'smm-core-item-wrapper');
+
+            // Replace the original node with our wrapper
+            $node->parentNode->replaceChild($wrapper, $node);
+
+            // Add the original node to our wrapper
+            $wrapper->appendChild($node);
         }
     }
 
-    //* Get the modified content
+    // Get the modified content
     $inner_content = '';
     $nav = $xpath->query("//nav")->item(0);
     if ($nav) {
@@ -210,6 +205,74 @@ function render_mega_menu_nav($attributes, $content) {
 
     return $inner_content;
 }
+// function render_mega_menu_nav($attributes, $content) {
+//     $dom = new DOMDocument();
+//     libxml_use_internal_errors(true);
+
+//     $wrapped_content = '<div>' . $content . '</div>';
+//     $dom->loadHTML(mb_convert_encoding($wrapped_content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+//     libxml_clear_errors();
+
+//     $xpath = new DOMXPath($dom);
+
+//     //* First, find the main UL element
+//     $mainUl = $xpath->query("//ul[@class='simple-mega-menu__list']")->item(0);
+
+//     //* Special handling for navigation links first
+//     $navLinks = $xpath->query("//li[contains(@class, 'wp-block-navigation-link')]");
+//     if ($navLinks) {
+//         foreach ($navLinks as $navLink) {
+//             if ($navLink instanceof DOMElement) {
+//                 $navLink->setAttribute('class', 'smm-navigation-link-wrapper');
+//             }
+//         }
+//     }
+
+//     //* Map of block types to their possible HTML elements (excluding navigation links)
+//     $block_mappings = [
+//         'wp-block-buttons' => ['div'],
+//         'wp-block-search' => ['form'],
+//         'wp-block-social-links' => ['ul'],
+//         'wp-block-home-link' => ['a'],
+//         'wp-block-site-title' => ['h1'],
+//         'wp-block-site-logo' => ['div']
+//     ];
+
+//     //* Process each block type
+//     foreach ($block_mappings as $block_class => $elements) {
+//         foreach ($elements as $element) {
+//             //* Build XPath query for this specific block type
+//             $query = "//{$element}[contains(@class, '{$block_class}') and not(ancestor::li[contains(@class, 'smm-')])]";
+//             $blocks = $xpath->query($query);
+
+//             if ($blocks) {
+//                 foreach ($blocks as $block) {
+//                     //* Create new li element
+//                     $li = $dom->createElement('li');
+//                     $li->setAttribute('class', 'smm-' . str_replace('wp-block-', '', $block_class) . '-wrapper');
+
+//                     //* Wrap block in li and append to main UL
+//                     $block->parentNode->replaceChild($li, $block);
+//                     $li->appendChild($block);
+
+//                     //* If the block is not already in the main UL, move it there
+//                     if ($li->parentNode !== $mainUl) {
+//                         $mainUl->appendChild($li);
+//                     }
+//                 }
+//             }
+//         }
+//     }
+
+//     //* Get the modified content
+//     $inner_content = '';
+//     $nav = $xpath->query("//nav")->item(0);
+//     if ($nav) {
+//         $inner_content = $dom->saveHTML($nav);
+//     }
+
+//     return $inner_content;
+// }
 
 
 /**

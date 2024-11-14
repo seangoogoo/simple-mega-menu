@@ -67,33 +67,55 @@ document.addEventListener('DOMContentLoaded', () => {
             //* Get the breakpoint value
             const smmNavStyle = getComputedStyle(smmNav)
             const smmBreakpoint = smmNavStyle.getPropertyValue('--mega-menu-breakpoint').trim()
-            let isMobileView = false
+			const megaMenuInputs = smmNav.querySelectorAll('input[id^="mega-menu-"]')
+			const burgerInput = smmNav.querySelector('input[id^="burger-input-smm-"]')
+            let isMobileView = undefined
 
             //* Add a resize observer to the header element
             const navResizeObserver = new ResizeObserver(entries => {
                 document.documentElement.style.setProperty('--smm-nav-height', Math.round(entries[0].contentRect.height) + 'px')
-                isMobileView = entries[0].contentRect.width <= parseInt(smmBreakpoint)
+                isCurrentlyMobileView = entries[0].contentRect.width <= parseInt(smmBreakpoint)
+
+				//* Auto-close opened burger menu and mega menu items when changing from mobile to desktop
+				if(isMobileView !== isCurrentlyMobileView) {
+					megaMenuInputs.forEach(input => input.checked = false)
+					burgerInput.checked = false
+					isMobileView = isCurrentlyMobileView
+				}
             })
             navResizeObserver.observe(header)
+
+			const setMMheight = (mmItem) => {
+				const height = mmItem.firstElementChild.scrollHeight
+				if(height > 0) mmItem.style.setProperty('--mega-menu-height', `${height}px`)
+			}
+
+			const smmLiItems = smmNav.querySelectorAll('.smm-item')
+			smmLiItems.forEach(liItem => {
+				const megaMenuItem = liItem.querySelector('div.wp-block-simple-mega-menu-mega-menu-item')
+				if (megaMenuItem) {
+					const menuItemResizeObserver = new ResizeObserver(entries => setMMheight(entries[0].target))
+					menuItemResizeObserver.observe(megaMenuItem)
+					setMMheight(megaMenuItem)
+				}
+			})
+
+			//* Autoclose mega menu items
+			if(smmNav.dataset.autoclose === 'true') {
+				megaMenuInputs.forEach(input => {
+					input.addEventListener('change', () => {
+					if (input.checked && isMobileView) {
+						megaMenuInputs.forEach(otherInput => {
+							if (otherInput !== input) {
+								otherInput.checked = false
+							}
+						})
+					}
+					})
+				})
+			}
+
         })
     }
 
-
-//     const megaMenus = document.querySelectorAll('.simple-mega-menu');
-
-//     megaMenus.forEach(menu => {
-//         const submenus = menu.querySelectorAll('.wp-block-navigation-submenu');
-
-//         submenus.forEach(submenu => {
-//             const toggle = submenu.querySelector('.wp-block-navigation-submenu__toggle');
-//             const content = submenu.querySelector('.wp-block-navigation-submenu__content');
-
-//             if (toggle && content) {
-//                 toggle.addEventListener('click', function(e) {
-//                     e.preventDefault();
-//                     content.style.display = content.style.display === 'block' ? 'none' : 'block';
-//                 });
-//             }
-//         });
-//     });
 })

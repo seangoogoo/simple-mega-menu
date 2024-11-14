@@ -48,9 +48,7 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
-// const ALLOWED_BLOCKS = ['simple-mega-menu/mega-menu-item', 'core/navigation-link', 'core/buttons', ['core/search'], ['core/social-links'], ['core/spacer'], ['core/home-link'], ['core/site-title'], ['core/site-logo']]
-
-const ALLOWED_BLOCKS = ['simple-mega-menu/mega-menu-item', 'core/navigation-link', 'core/buttons', 'core/search', 'core/social-links', 'core/home-link', 'core/site-title', 'core/site-logo'];
+const ALLOWED_BLOCKS = ['simple-mega-menu/mega-menu-item', 'core/navigation-link', 'core/buttons', 'core/search', 'core/social-links', 'core/home-link', 'core/site-title', 'core/site-logo', 'core/shortcode'];
 const TEMPLATE = [['simple-mega-menu/mega-menu-item'], ['simple-mega-menu/mega-menu-item'], ['core/buttons', {
   className: 'simple-mega-menu-buttons'
 }, [['core/button', {
@@ -73,7 +71,8 @@ function Edit({
     uniqueId,
     blockSpacing,
     megaMenuBreakpoint,
-    burgerPadding
+    burgerPadding,
+    autoclose
   } = attributes;
   const [isCustom, setIsCustom] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const [customUnit, setCustomUnit] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)('rem');
@@ -82,10 +81,13 @@ function Edit({
   const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps)({
     className: 'simple-mega-menu',
     ref: blockRef,
+    'data-autoclose': autoclose,
     style: {
       '--mega-menu-gap': blockSpacing || '0',
       '--mega-menu-breakpoint': megaMenuBreakpoint || '780px',
-      '--burger-padding': burgerPadding ? `${burgerPadding.top} ${burgerPadding.right} ${burgerPadding.bottom} ${burgerPadding.left}` : '0'
+      '--burger-padding': burgerPadding ? `${burgerPadding.top} ${burgerPadding.right} ${burgerPadding.bottom} ${burgerPadding.left}` : '0',
+      '--arrow-size': attributes.arrowSize || '4px',
+      '--arrow-thickness': attributes.arrowThickness || '1.5px'
     }
   });
   const units = [{
@@ -147,9 +149,9 @@ function Edit({
   }, [megaMenuBreakpoint]); //* Re-run effect when breakpoint changes
 
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.InspectorControls, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.InspectorControls, {
       group: "settings",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
         title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Mega Menu Settings', 'mega-menu-nav'),
         initialOpen: true,
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
@@ -160,7 +162,57 @@ function Edit({
             megaMenuBreakpoint: value
           })
         })
-      })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
+        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Custom CSS', 'simple-mega-menu'),
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('CSS pour Desktop', 'simple-mega-menu'),
+          help: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Par rapport au répertoire du thème, par exemple : assets/css/mega-menu-desktop.css', 'simple-mega-menu'),
+          value: attributes.desktopCssPath,
+          onChange: value => setAttributes({
+            desktopCssPath: value
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('CSS pour Mobile', 'simple-mega-menu'),
+          help: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Par rapport au répertoire du thème, par exemple : assets/css/mega-menu-mobile.css', 'simple-mega-menu'),
+          value: attributes.mobileCssPath,
+          onChange: value => setAttributes({
+            mobileCssPath: value
+          })
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
+        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Icône de flèche', 'simple-mega-menu'),
+        initialOpen: false,
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.RangeControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Dimension de l\'icône', 'simple-mega-menu'),
+          value: parseInt(attributes.arrowSize) || 4,
+          onChange: value => setAttributes({
+            arrowSize: value ? `${value}px` : '4px'
+          }),
+          min: 2,
+          max: 12,
+          step: 1
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.RangeControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Épaisseur de l\'icône', 'simple-mega-menu'),
+          value: parseFloat(attributes.arrowThickness) || 1.5,
+          onChange: value => setAttributes({
+            arrowThickness: value ? `${value}px` : '1.5px'
+          }),
+          min: 0.5,
+          max: 3,
+          step: 0.5
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
+        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Paramètre de menu mobile', 'simple-mega-menu'),
+        initialOpen: true,
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.ToggleControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Fermer automatiquement', 'simple-mega-menu'),
+          help: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Fermer automatiquement les autres menus lors de l\'ouverture d\'un menu en mode mobile', 'simple-mega-menu'),
+          checked: autoclose,
+          onChange: value => setAttributes({
+            autoclose: value
+          })
+        })
+      })]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.InspectorControls, {
       group: "styles",
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
@@ -379,15 +431,19 @@ function save({
     uniqueId,
     blockSpacing,
     megaMenuBreakpoint,
-    burgerPadding
+    burgerPadding,
+    autoclose
   } = attributes;
   const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.useBlockProps.save({
     id: uniqueId,
     className: 'simple-mega-menu',
+    'data-autoclose': autoclose,
     style: {
       '--mega-menu-gap': blockSpacing || '0',
       '--mega-menu-breakpoint': megaMenuBreakpoint || '780px',
-      '--burger-padding': burgerPadding ? `${burgerPadding.top} ${burgerPadding.right} ${burgerPadding.bottom} ${burgerPadding.left}` : '0'
+      '--burger-padding': burgerPadding ? `${burgerPadding.top} ${burgerPadding.right} ${burgerPadding.bottom} ${burgerPadding.left}` : '0',
+      '--arrow-size': attributes.arrowSize || '4px',
+      '--arrow-thickness': attributes.arrowThickness || '1.5px'
     }
   });
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("nav", {
@@ -504,7 +560,7 @@ module.exports = window["wp"]["i18n"];
   \**************************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"simple-mega-menu/mega-menu-nav","version":"0.1.0","title":"Mega Menu nav","category":"design","icon":"menu","description":"A custom navigation block with mega menu functionality.","ancestor":["core/template-part"],"attributes":{"uniqueId":{"type":"string"},"blockSpacing":{"type":"string","default":"0"},"megaMenuBreakpoint":{"type":"string","default":"780px"},"burgerPadding":{"type":"object","default":{"top":"0","right":"6px","bottom":"0","left":"6px"}},"templatePartArea":{"type":"string","default":"header"}},"supports":{"html":false,"align":["wide","full"],"innerBlocks":true},"textdomain":"simple-mega-menu","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render-nav.php","viewScript":"file:./view.js"}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"simple-mega-menu/mega-menu-nav","version":"0.1.1","title":"Mega Menu nav","category":"design","icon":"menu","description":"A custom navigation block with mega menu functionality.","ancestor":["core/template-part"],"attributes":{"uniqueId":{"type":"string"},"blockSpacing":{"type":"string","default":"0"},"megaMenuBreakpoint":{"type":"string","default":"780px"},"burgerPadding":{"type":"object","default":{"top":"0","right":"6px","bottom":"0","left":"6px"}},"desktopCssPath":{"type":"string","default":""},"mobileCssPath":{"type":"string","default":""},"arrowSize":{"type":"string","default":"4px"},"arrowThickness":{"type":"string","default":"1.5px"},"autoclose":{"type":"boolean","default":false},"templatePartArea":{"type":"string","default":"header"}},"supports":{"html":false,"align":["wide","full"],"innerBlocks":true},"textdomain":"simple-mega-menu","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","render":"file:./render-nav.php","viewScript":"file:./view.js"}');
 
 /***/ })
 

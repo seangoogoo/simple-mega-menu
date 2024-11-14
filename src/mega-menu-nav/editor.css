@@ -3,10 +3,6 @@
  *
  * Replace them with your own styles or remove the file completely.
  */
-nav.simple-mega-menu > .block-editor-inner-blocks > .block-editor-block-list__layout {
-  display: flex;
-  gap: var(--mega-menu-gap, 0);
-}
 nav.simple-mega-menu > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-editor-block-list__block.wp-block.smm-item {
   position: static;
 }
@@ -30,6 +26,10 @@ nav.simple-mega-menu > .block-editor-inner-blocks > .block-editor-block-list__la
 }
 nav.simple-mega-menu > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-editor-block-list__block.wp-block.smm-item > .block-editor-inner-blocks {
   display: none;
+}
+nav.simple-mega-menu:not(.is-mobile) > .block-editor-inner-blocks > .block-editor-block-list__layout {
+  display: flex;
+  gap: var(--mega-menu-gap, 0);
 }
 nav.simple-mega-menu:not(.is-mobile) > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-editor-block-list__block.wp-block.smm-item.is-selected > .block-editor-inner-blocks, nav.simple-mega-menu:not(.is-mobile) > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-editor-block-list__block.wp-block.smm-item.has-child-selected > .block-editor-inner-blocks {
   position: absolute;
@@ -69,8 +69,7 @@ nav.simple-mega-menu:not(.is-mobile) > .block-editor-inner-blocks > .block-edito
 }
 nav.simple-mega-menu:not(.is-mobile) > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-editor-block-list__block.wp-block.smm-item > .mega-menu-item__title {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-items: center;
 }
 nav.simple-mega-menu:not(.is-mobile) > .block-editor-inner-blocks > .block-editor-block-list__layout > .wp-block-navigation-item,
 nav.simple-mega-menu:not(.is-mobile) > .block-editor-inner-blocks > .block-editor-block-list__layout > .wp-block-site-title,
@@ -89,7 +88,7 @@ nav.simple-mega-menu.is-mobile > .block-editor-inner-blocks {
 nav.simple-mega-menu.is-mobile > .block-editor-inner-blocks > .block-editor-block-list__layout {
   position: absolute;
   inset: 0;
-  background-color: rgba(255, 255, 255, 0.8784313725);
+  background-color: var(--wp--preset--color--base, rgba(255, 255, 255, 0.8784313725));
   height: 100dvh;
   margin: 0;
   padding-block: 4rem 1rem;
@@ -102,12 +101,16 @@ nav.simple-mega-menu.is-mobile > .block-editor-inner-blocks > .block-editor-bloc
   display: flex;
   flex-direction: column;
 }
-nav.simple-mega-menu.is-mobile > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-editor-block-list__block.wp-block.smm-item.is-selected .block-editor-rich-text__editable.mega-menu-item__title.rich-text, nav.simple-mega-menu.is-mobile > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-editor-block-list__block.wp-block.smm-item.has-child-selected .block-editor-rich-text__editable.mega-menu-item__title.rich-text {
-  margin: 0 auto;
-}
 nav.simple-mega-menu.is-mobile > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-editor-block-list__block.wp-block.smm-item.is-selected > .block-editor-inner-blocks, nav.simple-mega-menu.is-mobile > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-editor-block-list__block.wp-block.smm-item.has-child-selected > .block-editor-inner-blocks {
   display: block;
   background-color: var(--wp--preset--color--base);
+}
+nav.simple-mega-menu.is-mobile > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-editor-block-list__block.wp-block.smm-item.is-selected > .block-editor-inner-blocks img, nav.simple-mega-menu.is-mobile > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-editor-block-list__block.wp-block.smm-item.has-child-selected > .block-editor-inner-blocks img {
+  display: none;
+}
+nav.simple-mega-menu.is-mobile > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-editor-block-list__block.wp-block.smm-item.is-selected > .block-editor-inner-blocks ul, nav.simple-mega-menu.is-mobile > .block-editor-inner-blocks > .block-editor-block-list__layout > .block-editor-block-list__block.wp-block.smm-item.has-child-selected > .block-editor-inner-blocks ul {
+  list-style: none;
+  padding-left: 0;
 }
 nav.simple-mega-menu.is-mobile:has(input[id^=burger-input-smm][type=checkbox]:not(:checked)) > .block-editor-inner-blocks > .block-editor-block-list__layout {
   display: none;

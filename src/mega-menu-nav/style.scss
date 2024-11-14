@@ -7,8 +7,6 @@
 
 nav.simple-mega-menu {
 	position: static;
-	// display: grid;
-	// grid-template-columns: 1fr auto;
 	ul.simple-mega-menu__list {
 		display: flex;
 		list-style: none;
@@ -91,55 +89,3 @@ nav.simple-mega-menu {
 header:has(nav.simple-mega-menu) :where(.wp-block-group.wp-block-group-is-layout-constrained) {
     position: static !important;
 }
-
-// .simple-mega-menu {
-// 	&__nav {
-// 		background-color: #f8f8f8;
-// 		padding: 10px;
-// 	}
-
-// 	&__list {
-// 		list-style-type: none;
-// 		margin: 0;
-// 		padding: 0;
-// 		display: flex;
-// 		flex-wrap: wrap;
-// 	}
-
-// 	.wp-block-navigation-item {
-// 		margin: 0 10px;
-
-// 		&__content {
-// 			color: #333;
-// 			text-decoration: none;
-// 			font-weight: bold;
-
-// 			&:hover {
-// 				color: #0073aa;
-// 			}
-// 		}
-// 	}
-
-// 	.wp-block-navigation-submenu {
-// 		position: relative;
-
-// 		&__toggle {
-// 			cursor: pointer;
-// 		}
-
-// 		&__content {
-// 			display: none;
-// 			position: absolute;
-// 			top: 100%;
-// 			left: 0;
-// 			background-color: #fff;
-// 			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-// 			padding: 10px;
-// 			min-width: 200px;
-// 		}
-
-// 		&:hover .wp-block-navigation-submenu__content {
-// 			display: block;
-// 		}
-// 	}
-// }
