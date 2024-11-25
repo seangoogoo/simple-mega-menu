@@ -137,10 +137,6 @@ function render_mega_menu_style($attributes) {
 				#%2$s:has(.smm-burger__wrapper input[type="checkbox"]:not(:checked)) .simple-mega-menu__list {
 					display: none;
 				}
-				#%2$s:has(.smm-burger__wrapper input[type="checkbox"]:checked) .simple-mega-menu__list {
-					display: block;
-				}
-
 				/* Custom mobile styles */
                 %4$s
 			}
