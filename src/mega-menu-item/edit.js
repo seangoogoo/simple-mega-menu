@@ -164,7 +164,7 @@ export default function Edit({attributes, setAttributes}) {
 					<ToggleGroupControl
 						label={__('Largeur du Mega Menu', 'mega-menu-item')}
 						value={megaMenuWidth?.includes('px') ? 'custom' : megaMenuWidth === '100%' ? '100percent' : '100vw'}
-						help={megaMenuWidth === '100%' ? __('Add the CSS class "smm-item-wrapper-relative" to the parent element of the menu item for proper 100% width wrapping', 'mega-menu-item') : undefined}
+						help={megaMenuWidth === '100%' ? __('Ajoutez la classe CSS "smm-item-wrapper-relative" à l\'élément parent de l\'élément de menu pour un habillage correct à 100% de la largeur. Un aperçu réaliste n\'est pas possible dans l\'éditeur.', 'mega-menu-item') : undefined}
 						onChange={(value) => {
 							// Set width based on selected option
 							if (value === '100vw') {

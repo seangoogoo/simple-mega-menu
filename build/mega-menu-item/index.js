@@ -189,7 +189,7 @@ function Edit({
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalToggleGroupControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Largeur du Mega Menu', 'mega-menu-item'),
           value: megaMenuWidth?.includes('px') ? 'custom' : megaMenuWidth === '100%' ? '100percent' : '100vw',
-          help: megaMenuWidth === '100%' ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Add the CSS class "smm-item-wrapper-relative" to the parent element of the menu item for proper 100% width wrapping', 'mega-menu-item') : undefined,
+          help: megaMenuWidth === '100%' ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Ajoutez la classe CSS "smm-item-wrapper-relative" à l\'élément parent de l\'élément de menu pour un habillage correct à 100% de la largeur. Un aperçu réaliste n\'est pas possible dans l\'éditeur.', 'mega-menu-item') : undefined,
           onChange: value => {
             // Set width based on selected option
             if (value === '100vw') {

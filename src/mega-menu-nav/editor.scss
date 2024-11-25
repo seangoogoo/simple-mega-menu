@@ -89,8 +89,9 @@ nav.simple-mega-menu {
 							left: var(--mega-menu-left, 0);
 						}
 					}
+					&.has-100percent-width,
 					&.has-viewport-width {
-						> .block-editor-inner-blocks {
+							> .block-editor-inner-blocks {
 							left: var(--editor-content-left, 0);
 							width: var(--editor-content-width, 100%);
 						}
