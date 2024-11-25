@@ -84,4 +84,4 @@ nav.simple-mega-menu > .smm-burger__wrapper label.burger-icon:has([id^=burger-in
 
 header:has(nav.simple-mega-menu) :where(.wp-block-group.wp-block-group-is-layout-constrained) {
   position: static !important;
-}/*# sourceMappingURL=style.css.map */
+}

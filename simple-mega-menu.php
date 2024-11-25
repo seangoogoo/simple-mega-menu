@@ -37,14 +37,14 @@ function render_mega_menu_style($attributes) {
     $desktop_css = '';
     $mobile_css = '';
     if (!empty($attributes['desktopCssPath'])) {
-        $desktop_file = get_template_directory() . '/' . $attributes['desktopCssPath'];
+		$desktop_file = get_stylesheet_directory() . '/' . $attributes['desktopCssPath'];
         if (file_exists($desktop_file)) {
             $desktop_css = file_get_contents($desktop_file);
         }
     }
 
     if (!empty($attributes['mobileCssPath'])) {
-        $mobile_file = get_template_directory() . '/' . $attributes['mobileCssPath'];
+        $mobile_file = get_stylesheet_directory() . '/' . $attributes['mobileCssPath'];
         if (file_exists($mobile_file)) {
             $mobile_css = file_get_contents($mobile_file);
         }
