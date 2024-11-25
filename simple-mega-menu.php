@@ -55,6 +55,10 @@ function render_mega_menu_style($attributes) {
 
 			/* Desktop */
 			@media (min-width: calc(%1$s + 1px)) {
+				/* SMM Item wrapper in case of has-100percent-width */
+				.smm-item-wrapper-relative {
+					position: relative;
+				}
 				#%2$s .smm-burger__wrapper {
 					display: none;
 				}
@@ -80,6 +84,10 @@ function render_mega_menu_style($attributes) {
 				}
 				#%2$s .simple-mega-menu__list .smm-item.has-viewport-width .mega-menu-item__title + * {
 					width: calc(100vw - var(--scrollbar-width, 0px));
+					left: 0;
+				}
+				#%2$s .simple-mega-menu__list .smm-item.has-100percent-width .mega-menu-item__title + * {
+					width: var(--mega-menu-width, 100%%);
 					left: 0;
 				}
 				#%2$s .simple-mega-menu__list .smm-item.has-custom-width {

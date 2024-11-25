@@ -137,9 +137,11 @@ export default function Edit({attributes, setAttributes}) {
     className: `smm-item ${
         megaMenuWidth === '100vw'
             ? 'has-viewport-width'
-            : megaMenuWidth?.includes('px')
-                ? 'has-custom-width'
-                : ''
+            : megaMenuWidth === '100%'
+                ? 'has-100percent-width'
+                : megaMenuWidth?.includes('px')
+                    ? 'has-custom-width'
+                    : ''
     }`,
 		style: {
 			'--mega-menu-width': megaMenuWidth || '100vw',
@@ -161,11 +163,14 @@ export default function Edit({attributes, setAttributes}) {
 				<PanelBody title={__('Settings', 'mega-menu-item')}>
 					<ToggleGroupControl
 						label={__('Largeur du Mega Menu', 'mega-menu-item')}
-						value={megaMenuWidth?.includes('px') ? 'custom' : '100vw'}
+						value={megaMenuWidth?.includes('px') ? 'custom' : megaMenuWidth === '100%' ? '100percent' : '100vw'}
+						help={megaMenuWidth === '100%' ? __('Add the CSS class "smm-item-wrapper-relative" to the parent element of the menu item for proper 100% width wrapping', 'mega-menu-item') : undefined}
 						onChange={(value) => {
-							// If switching to 100vw, set that directly
+							// Set width based on selected option
 							if (value === '100vw') {
 								setAttributes({ megaMenuWidth: '100vw' })
+							} else if (value === '100percent') {
+								setAttributes({ megaMenuWidth: '100%' })
 							} else {
 								// If switching to custom, set a default pixel value
 								setAttributes({ megaMenuWidth: '800px' })
@@ -179,6 +184,10 @@ export default function Edit({attributes, setAttributes}) {
 						<ToggleGroupControlOption
 							value="100vw"
 							label="100vw"
+						/>
+						<ToggleGroupControlOption
+							value="100percent"
+							label="100%"
 						/>
 					</ToggleGroupControl>
 					{megaMenuWidth?.includes('px') && (

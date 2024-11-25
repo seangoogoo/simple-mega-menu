@@ -11,9 +11,11 @@ $wrapper_attributes = get_block_wrapper_attributes([
     'class' => 'smm-item ' . (
         $attributes['megaMenuWidth'] === '100vw'
             ? 'has-viewport-width'
-            : (strpos($attributes['megaMenuWidth'], 'px') !== false
-                ? 'has-custom-width'
-                : '')
+            : ($attributes['megaMenuWidth'] === '100%'
+                ? 'has-100percent-width'
+                : (strpos($attributes['megaMenuWidth'], 'px') !== false
+                    ? 'has-custom-width'
+                    : ''))
     )
 ]);
 

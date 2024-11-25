@@ -170,7 +170,7 @@ function Edit({
   }, []); //* Empty dependency array means this effect runs once on mount
 
   const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)({
-    className: `smm-item ${megaMenuWidth === '100vw' ? 'has-viewport-width' : megaMenuWidth?.includes('px') ? 'has-custom-width' : ''}`,
+    className: `smm-item ${megaMenuWidth === '100vw' ? 'has-viewport-width' : megaMenuWidth === '100%' ? 'has-100percent-width' : megaMenuWidth?.includes('px') ? 'has-custom-width' : ''}`,
     style: {
       '--mega-menu-width': megaMenuWidth || '100vw',
       '--mega-menu-left': megaMenuLeft || '0px'
@@ -188,12 +188,17 @@ function Edit({
         title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Settings', 'mega-menu-item'),
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalToggleGroupControl, {
           label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Largeur du Mega Menu', 'mega-menu-item'),
-          value: megaMenuWidth?.includes('px') ? 'custom' : '100vw',
+          value: megaMenuWidth?.includes('px') ? 'custom' : megaMenuWidth === '100%' ? '100percent' : '100vw',
+          help: megaMenuWidth === '100%' ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Add the CSS class "smm-item-wrapper-relative" to the parent element of the menu item for proper 100% width wrapping', 'mega-menu-item') : undefined,
           onChange: value => {
-            // If switching to 100vw, set that directly
+            // Set width based on selected option
             if (value === '100vw') {
               setAttributes({
                 megaMenuWidth: '100vw'
+              });
+            } else if (value === '100percent') {
+              setAttributes({
+                megaMenuWidth: '100%'
               });
             } else {
               // If switching to custom, set a default pixel value
@@ -208,6 +213,9 @@ function Edit({
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalToggleGroupControlOption, {
             value: "100vw",
             label: "100vw"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalToggleGroupControlOption, {
+            value: "100percent",
+            label: "100%"
           })]
         }), megaMenuWidth?.includes('px') && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
@@ -400,7 +408,15 @@ function save({
     titlePadding
   } = attributes;
   const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.useBlockProps.save({
-    className: `smm-item ${megaMenuWidth === '100vw' ? 'has-viewport-width' : megaMenuWidth?.includes('px') ? 'has-custom-width' : ''}`,
+    /**
+     * className: Generated classnames for the save function.
+     * 'has-viewport-width' if megaMenuWidth is set to '100vw'.
+     * 'has-100percent-width' if megaMenuWidth is set to '100%'.
+     * 'has-custom-width' if megaMenuWidth is set to a custom value
+     * with a 'px' unit (e.g. '300px').
+     * Otherwise, an empty string.
+     */
+    className: `smm-item ${megaMenuWidth === '100vw' ? 'has-viewport-width' : megaMenuWidth === '100%' ? 'has-100percent-width' : megaMenuWidth?.includes('px') ? 'has-custom-width' : ''}`,
     style: {
       '--mega-menu-width': megaMenuWidth || '100vw',
       '--mega-menu-left': megaMenuLeft || '0px'
