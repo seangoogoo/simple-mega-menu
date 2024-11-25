@@ -4,7 +4,7 @@
  * Description:       A custom navigation block with mega menu functionality.
  * Requires at least: 6.6
  * Requires PHP:      7.2
- * Version:           0.1.1
+ * Version:           0.1.2
  * Author:            Jensen SIU
  * Author URI:        https://www.jensen.siu.net
  * License:           GPL-2.0-or-later

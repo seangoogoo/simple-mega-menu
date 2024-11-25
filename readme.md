@@ -63,7 +63,7 @@ Change into the newly created plugin directory:
 ### 4. Install dependencies
 
 Install dependencies using npm or yarn.
-Make sure Node.js and npm are installed on your machine. 
+Make sure Node.js and npm are installed on your machine.
 
 You can check by running:
 `node -v`
@@ -89,6 +89,9 @@ Go to your WordPress admin panel (https://www.your-site.com/wp-admin or your loc
 
 
 ## Changelog
+
+### Release 0.1.2
+  - Added support for 100% width mega menu items relative to a parent element using the 'relative' property
 
 ### Release 0.1.1
   - Right arrow icon for Mega Menu buttons arrow
