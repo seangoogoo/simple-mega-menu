@@ -4,7 +4,7 @@
  * Description:       A custom navigation block with mega menu functionality.
  * Requires at least: 6.6
  * Requires PHP:      7.2
- * Version:           0.1.2
+ * Version:           0.1.3
  * Author:            Jensen SIU
  * Author URI:        https://www.jensen.siu.net
  * License:           GPL-2.0-or-later
@@ -36,15 +36,24 @@ function render_mega_menu_style($attributes) {
     // Get custom CSS content if paths are provided
     $desktop_css = '';
     $mobile_css = '';
+
     if (!empty($attributes['desktopCssPath'])) {
-		$desktop_file = get_stylesheet_directory() . '/' . $attributes['desktopCssPath'];
+        // Try child theme first, then parent theme
+        $desktop_file = get_stylesheet_directory() . '/' . $attributes['desktopCssPath'];
+        if (!file_exists($desktop_file) && is_child_theme()) {
+            $desktop_file = get_template_directory() . '/' . $attributes['desktopCssPath'];
+        }
         if (file_exists($desktop_file)) {
             $desktop_css = file_get_contents($desktop_file);
         }
     }
 
     if (!empty($attributes['mobileCssPath'])) {
+        // Try child theme first, then parent theme
         $mobile_file = get_stylesheet_directory() . '/' . $attributes['mobileCssPath'];
+        if (!file_exists($mobile_file) && is_child_theme()) {
+            $mobile_file = get_template_directory() . '/' . $attributes['mobileCssPath'];
+        }
         if (file_exists($mobile_file)) {
             $mobile_css = file_get_contents($mobile_file);
         }
@@ -153,8 +162,8 @@ function render_mega_menu_nav($attributes, $content) {
     $dom = new DOMDocument();
     libxml_use_internal_errors(true);
 
-    $wrapped_content = '<div>' . $content . '</div>';
-    $dom->loadHTML(mb_convert_encoding($wrapped_content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    $wrapped_content = '<div>' . html_entity_decode($content, ENT_QUOTES | ENT_HTML5, 'UTF-8') . '</div>';
+    $dom->loadHTML($wrapped_content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
     libxml_clear_errors();
 
     $xpath = new DOMXPath($dom);
@@ -209,75 +218,6 @@ function render_mega_menu_nav($attributes, $content) {
 
     return $inner_content;
 }
-// function render_mega_menu_nav($attributes, $content) {
-//     $dom = new DOMDocument();
-//     libxml_use_internal_errors(true);
-
-//     $wrapped_content = '<div>' . $content . '</div>';
-//     $dom->loadHTML(mb_convert_encoding($wrapped_content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-//     libxml_clear_errors();
-
-//     $xpath = new DOMXPath($dom);
-
-//     //* First, find the main UL element
-//     $mainUl = $xpath->query("//ul[@class='simple-mega-menu__list']")->item(0);
-
-//     //* Special handling for navigation links first
-//     $navLinks = $xpath->query("//li[contains(@class, 'wp-block-navigation-link')]");
-//     if ($navLinks) {
-//         foreach ($navLinks as $navLink) {
-//             if ($navLink instanceof DOMElement) {
-//                 $navLink->setAttribute('class', 'smm-navigation-link-wrapper');
-//             }
-//         }
-//     }
-
-//     //* Map of block types to their possible HTML elements (excluding navigation links)
-//     $block_mappings = [
-//         'wp-block-buttons' => ['div'],
-//         'wp-block-search' => ['form'],
-//         'wp-block-social-links' => ['ul'],
-//         'wp-block-home-link' => ['a'],
-//         'wp-block-site-title' => ['h1'],
-//         'wp-block-site-logo' => ['div']
-//     ];
-
-//     //* Process each block type
-//     foreach ($block_mappings as $block_class => $elements) {
-//         foreach ($elements as $element) {
-//             //* Build XPath query for this specific block type
-//             $query = "//{$element}[contains(@class, '{$block_class}') and not(ancestor::li[contains(@class, 'smm-')])]";
-//             $blocks = $xpath->query($query);
-
-//             if ($blocks) {
-//                 foreach ($blocks as $block) {
-//                     //* Create new li element
-//                     $li = $dom->createElement('li');
-//                     $li->setAttribute('class', 'smm-' . str_replace('wp-block-', '', $block_class) . '-wrapper');
-
-//                     //* Wrap block in li and append to main UL
-//                     $block->parentNode->replaceChild($li, $block);
-//                     $li->appendChild($block);
-
-//                     //* If the block is not already in the main UL, move it there
-//                     if ($li->parentNode !== $mainUl) {
-//                         $mainUl->appendChild($li);
-//                     }
-//                 }
-//             }
-//         }
-//     }
-
-//     //* Get the modified content
-//     $inner_content = '';
-//     $nav = $xpath->query("//nav")->item(0);
-//     if ($nav) {
-//         $inner_content = $dom->saveHTML($nav);
-//     }
-
-//     return $inner_content;
-// }
-
 
 /**
  * Registers the block using the metadata loaded from the `block.json` file.
@@ -286,6 +226,8 @@ function render_mega_menu_nav($attributes, $content) {
  *
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
+
+
 function simple_mega_menu_block_init() {
 	register_block_type( __DIR__ . '/build/mega-menu-nav' );
 	register_block_type( __DIR__ . '/build/mega-menu-item' );

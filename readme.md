@@ -90,6 +90,10 @@ Go to your WordPress admin panel (https://www.your-site.com/wp-admin or your loc
 
 ## Changelog
 
+### Release 0.1.3
+  - Fix block not loading in the editor while plugin loaded in a theme that is not a child theme
+  - Fix deprecated use of mb_convert_encoding() function
+
 ### Release 0.1.2
   - Added support for 100% width mega menu items relative to a parent element using the 'relative' property
 
@@ -102,6 +106,7 @@ Go to your WordPress admin panel (https://www.your-site.com/wp-admin or your loc
 ## To Do
 
 - Add a list view in the mega menu nav block,
+- Add color customization for the mega menu item arrow,
 - Check compatibility with several Full Site Editing themes,
 - Manage internationalization (actually, hard-coded in French),
 - Add ARIA attributes on important elements,
