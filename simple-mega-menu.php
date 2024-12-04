@@ -162,7 +162,13 @@ function render_mega_menu_nav($attributes, $content) {
     $dom = new DOMDocument();
     libxml_use_internal_errors(true);
 
-    $wrapped_content = '<div>' . html_entity_decode($content, ENT_QUOTES | ENT_HTML5, 'UTF-8') . '</div>';
+    $convmap = array(
+        0x80, 0x10FFFF, 0, 0xFFFFFF
+    );
+
+    // Convert special characters to numeric entities
+    $content = mb_encode_numericentity($content, $convmap, 'UTF-8');
+    $wrapped_content = '<div>' . $content . '</div>';
     $dom->loadHTML($wrapped_content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
     libxml_clear_errors();
 
@@ -215,9 +221,9 @@ function render_mega_menu_nav($attributes, $content) {
     if ($nav) {
         $inner_content = $dom->saveHTML($nav);
     }
-
     return $inner_content;
 }
+
 
 /**
  * Registers the block using the metadata loaded from the `block.json` file.
