@@ -76,7 +76,7 @@ If they are installed, install the dependencies:
 
 ### 5. Modify the plugin (optional)
 
-I you want to modify or improve functionnalities or design, run:
+I you want to modify or improve functionalities or design, run:
 
 `npm start`
 
