@@ -23,12 +23,15 @@ import {
     FlexItem,
     SelectControl,
     PanelBody,
-    ToggleControl
+    ToggleControl,
+    ColorPalette,
+    BaseControl
 } from '@wordpress/components'
 import {
     InnerBlocks,
     useBlockProps,
-    InspectorControls
+    InspectorControls,
+    useSetting
 } from '@wordpress/block-editor'
 
 /**
@@ -67,6 +70,9 @@ export default function Edit({attributes, setAttributes}) {
     const [isMobile, setIsMobile] = useState(false)
     const blockRef = useRef(null)
 
+    // Get theme colors for the color picker
+    const colors = useSetting('color.palette')
+
 	const blockProps = useBlockProps({
 		className: 'simple-mega-menu',
         ref: blockRef,
@@ -78,7 +84,8 @@ export default function Edit({attributes, setAttributes}) {
                 `${burgerPadding.top} ${burgerPadding.right} ${burgerPadding.bottom} ${burgerPadding.left}` :
                 '0',
             '--arrow-size': attributes.arrowSize || '4px',
-            '--arrow-thickness': attributes.arrowThickness || '1.5px'
+            '--arrow-thickness': attributes.arrowThickness || '1.5px',
+            '--smm-arrow-color': attributes.arrowColor || undefined
         }
 	})
 
@@ -178,6 +185,17 @@ export default function Edit({attributes, setAttributes}) {
                         max={3}
                         step={0.5}
                     />
+                    <BaseControl
+                        label={__('Couleur de l\'icône', 'simple-mega-menu')}
+                        help={__('Laissez vide pour utiliser la couleur du thème', 'simple-mega-menu')}
+                    >
+                        <ColorPalette
+                            value={attributes.arrowColor}
+                            onChange={(color) => setAttributes({ arrowColor: color })}
+                            colors={colors}
+                            clearable={true}
+                        />
+                    </BaseControl>
                 </PanelBody>
                 <PanelBody
                     title={__('Paramètre de menu mobile', 'simple-mega-menu')}

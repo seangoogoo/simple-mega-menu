@@ -13,7 +13,8 @@ export default function save({ attributes }) {
                 `${burgerPadding.top} ${burgerPadding.right} ${burgerPadding.bottom} ${burgerPadding.left}` :
                 '0',
             '--arrow-size': attributes.arrowSize || '4px',
-            '--arrow-thickness': attributes.arrowThickness || '1.5px'
+            '--arrow-thickness': attributes.arrowThickness || '1.5px',
+            '--smm-arrow-color': attributes.arrowColor || undefined
         }
     })
 

@@ -93,6 +93,9 @@ Go to your WordPress admin panel (https://www.your-site.com/wp-admin or your loc
 
 ## Changelog
 
+### Release 0.1.5
+  - Enhanced arrow icon color picker to display theme preset color palette for consistent theme integration
+
 ### Release 0.1.4
   - Added new mega-menu-link block for creating custom navigation links within mega menu items
   - Implemented compact, inline editor UI for mega-menu-link with minimal visual footprint

@@ -11,7 +11,7 @@
 	padding: 0;
 	//* Label
 	.mega-menu-item__title {
-		--arrow-border: var(--arrow-thickness) solid var(--wp--preset--color--contrast);
+		--arrow-border: var(--arrow-thickness) solid var(--smm-arrow-color, var(--wp--preset--color--contrast, grey));
 		display: flex;
 		align-items: center;
 		cursor: pointer;
