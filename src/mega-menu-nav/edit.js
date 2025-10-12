@@ -39,7 +39,7 @@ import {
  */
 import './editor.scss'
 
-const ALLOWED_BLOCKS = ['simple-mega-menu/mega-menu-item', 'core/navigation-link', 'core/buttons', 'core/search', 'core/social-links', 'core/home-link', 'core/site-title', 'core/site-logo', 'core/shortcode']
+const ALLOWED_BLOCKS = ['simple-mega-menu/mega-menu-item', 'simple-mega-menu/mega-menu-link', 'core/paragraph', 'core/html', 'core/navigation-link', 'core/buttons', 'core/search', 'core/social-links', 'core/home-link', 'core/site-title', 'core/site-logo', 'core/shortcode']
 const TEMPLATE = [
     ['simple-mega-menu/mega-menu-item'],
     ['simple-mega-menu/mega-menu-item'],

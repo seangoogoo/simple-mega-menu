@@ -1,0 +1,59 @@
+/**
+ * Editor-only styles for the mega-menu-link block.
+ *
+ * This file is compiled to index.css and loaded only in the editor.
+ * Compact styling to match mega-menu-item appearance.
+ */
+
+.mega-menu-link-block {
+	display: flex;
+	position: relative;
+
+	.mega-menu-link-wrapper {
+		display: inline-flex;
+		align-items: center;
+		gap: 0;
+
+		.mega-menu-link-label {
+			display: inline-block;
+			padding: 0 0 0 8px;
+			min-width: 60px;
+			border-bottom: 1px dashed transparent;
+			transition: border-color 0.2s ease;
+
+			&:hover {
+				border-bottom-color: #007cba;
+			}
+
+			&:focus {
+				outline: 1px solid #007cba;
+				outline-offset: 2px;
+				border-bottom-color: transparent;
+			}
+
+			&:empty::before {
+				content: attr(placeholder);
+				color: #999;
+				font-style: italic;
+			}
+		}
+
+		.mega-menu-link-button {
+			flex-shrink: 0;
+			padding: 0;
+			min-width: auto;
+			height: auto;
+
+			svg {
+				width: 16px;
+				height: 16px;
+			}
+		}
+	}
+}
+
+// Popover styles
+.components-popover.mega-menu-link-popover {
+	z-index: 1000000;
+}
+

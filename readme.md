@@ -19,6 +19,7 @@ Any blocks can be added to mega menu items: groups, columns, images, buttons, et
 First level navigation supports the custom Mega Menu block, plus:
 
 - 'simple-mega-menu/mega-menu-item',
+- 'simple-mega-menu/mega-menu-link',
 - 'core/navigation-link',
 - 'core/buttons',
 - 'core/search',
@@ -26,6 +27,8 @@ First level navigation supports the custom Mega Menu block, plus:
 - 'core/home-link',
 - 'core/site-title',
 - 'core/site-logo',
+- 'core/paragraph',
+- 'core/html',
 - 'core/shortcode'
 
 Doesn't use jQuery and provides a minimal usage of Javascript to custom CSS variables such as mega menu items height, scrollbar width, header height, etc.
@@ -90,6 +93,14 @@ Go to your WordPress admin panel (https://www.your-site.com/wp-admin or your loc
 
 ## Changelog
 
+### Release 0.1.4
+  - Added new mega-menu-link block for creating custom navigation links within mega menu items
+  - Implemented compact, inline editor UI for mega-menu-link with minimal visual footprint
+  - Integrated WordPress LinkControl component for easy page/post selection and URL management
+  - Added comprehensive Inspector Controls for link settings (URL, text, target, rel, title attributes)
+  - Optimized editor experience with streamlined interface (removed redundant URL preview, compact icon button)
+  - Support for 'core/paragraph' and 'core/html' blocks within mega-menu-nav
+
 ### Release 0.1.3
   - Fix block not loading in the editor while plugin loaded in a theme that is not a child theme
   - Fix deprecated use of mb_convert_encoding() function
@@ -105,6 +116,7 @@ Go to your WordPress admin panel (https://www.your-site.com/wp-admin or your loc
 
 ## To Do
 
+- Solve package deprecation warnings,
 - Add a list view in the mega menu nav block,
 - Add color customization for the mega menu item arrow,
 - Check compatibility with several Full Site Editing themes,
