@@ -93,6 +93,13 @@ Go to your WordPress admin panel (https://www.your-site.com/wp-admin or your loc
 
 ## Changelog
 
+### Release 0.1.6
+  - Fix deprecated `useSetting` hook in favor of `useSettings`
+  - Opt-in for future default props on `TextControl`, `ToggleControl`, `RangeControl`, `BaseControl`, `BoxControl`, `SelectControl`, `FontSizePicker`, and `ToggleGroupControl` to resolve deprecation warnings
+  - Implemented conditional custom padding for `mega-menu-item` with new `enableCustomPadding` attribute
+  - Updated `mega-menu-link` styles to use flexbox for better alignment and removed default padding/hover effects
+  - Removed `!important` from `position: static` rule in `mega-menu-nav` styles for better compatibility
+
 ### Release 0.1.5
   - Enhanced arrow icon color picker to display theme preset color palette for consistent theme integration
 
@@ -119,7 +126,7 @@ Go to your WordPress admin panel (https://www.your-site.com/wp-admin or your loc
 
 ## To Do
 
-- Solve package deprecation warnings,
+
 - Add a list view in the mega menu nav block,
 - Add color customization for the mega menu item arrow,
 - Check compatibility with several Full Site Editing themes,

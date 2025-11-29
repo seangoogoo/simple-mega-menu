@@ -74,29 +74,38 @@ export default function Edit({ attributes, setAttributes, isSelected }) {
 			<InspectorControls>
 				<PanelBody title={__('Link Settings', 'simple-mega-menu')}>
 					<TextControl
+						__next40pxDefaultSize={true}
+						__nextHasNoMarginBottom={true}
 						label={__('URL', 'simple-mega-menu')}
 						value={url}
 						onChange={(value) => setAttributes({ url: value })}
 						placeholder={__('https://example.com', 'simple-mega-menu')}
 					/>
 					<TextControl
+						__next40pxDefaultSize={true}
+						__nextHasNoMarginBottom={true}
 						label={__('Link Text', 'simple-mega-menu')}
 						value={label}
 						onChange={handleLabelChange}
 						placeholder={__('Enter link text', 'simple-mega-menu')}
 					/>
 					<ToggleControl
+						__nextHasNoMarginBottom={true}
 						label={__('Open in new tab', 'simple-mega-menu')}
 						checked={opensInNewTab}
 						onChange={(value) => setAttributes({ opensInNewTab: value })}
 					/>
 					<TextControl
+						__next40pxDefaultSize={true}
+						__nextHasNoMarginBottom={true}
 						label={__('Link Title (tooltip)', 'simple-mega-menu')}
 						value={title}
 						onChange={(value) => setAttributes({ title: value })}
 						placeholder={__('Optional title attribute', 'simple-mega-menu')}
 					/>
 					<TextControl
+						__next40pxDefaultSize={true}
+						__nextHasNoMarginBottom={true}
 						label={__('Link Rel', 'simple-mega-menu')}
 						value={rel}
 						onChange={(value) => setAttributes({ rel: value })}

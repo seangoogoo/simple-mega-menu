@@ -22,14 +22,12 @@
             "default": "0px"
         },
         "titlePadding": {
-            "type": "object",
-            "default": {
-                "top": "0px",
-                "right": "8px",
-                "bottom": "0px",
-                "left": "8px"
-            }
+            "type": "object"
         },
+		"enableCustomPadding": {
+			"type": "boolean",
+			"default": false
+		},
 		"fontSize": {
 			"type": "object"
 		}

@@ -20,7 +20,7 @@ $wrapper_attributes = get_block_wrapper_attributes([
 ]);
 
 $title_style = '';
-if (!empty($attributes['titlePadding'])) {
+if (!empty($attributes['enableCustomPadding']) && !empty($attributes['titlePadding'])) {
     $padding = $attributes['titlePadding'];
     $title_style .= sprintf(
         'padding: %s %s %s %s;',

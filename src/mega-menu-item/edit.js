@@ -13,11 +13,12 @@ import { __ } from '@wordpress/i18n'
  */
 import {
 	PanelBody,
+	ToggleControl,
 	__experimentalBoxControl as BoxControl,
 	__experimentalToggleGroupControl as ToggleGroupControl,
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
-    FontSizePicker,
-    TextControl
+	FontSizePicker,
+	TextControl
 } from '@wordpress/components'
 import {
 	InspectorControls,
@@ -40,42 +41,42 @@ const TEMPLATE = [
 	['core/columns', {
 		className: 'has-background',
 		style: {
-		color: { background: '#ffffff00' },
+			color: { background: '#ffffff00' },
 			spacing: {
 				margin: { top: '0', bottom: '0' },
 				padding: { top: '20px', right: '0', bottom: '20px', left: '0' }
 			}
 		}
 	}, [
-		['core/column', { layout: { type: 'default' } }, [
-			['core/heading', { level: 2, content: 'Titre h2' }],
-			['core/columns', { style: { color: { background: '#ffffff00' } } }, [
-				['core/column', {}, [
-					['core/image', {
-						sizeSlug: 'large',
-						url: 'https://placehold.co/600x400/f3f6f7/black/?text=mega%20menu%20image',
-						alt: ''
-					}]
-				]],
-				['core/column', {}, [
-					['core/list', { className: 'wp-block-list' }, [
-						['core/list-item', { content: '<a href="#">Sous menu 01</a>' }],
-						['core/list-item', { content: '<a href="#">Sous-menu 02</a>' }],
-						['core/list-item', { content: '<a href="#">Sous-menu 03</a>' }],
-						['core/list-item', { content: '<a href="#">Sous-menu 04</a>' }]
-					]]
-				]],
-				['core/column', {}, [
-					['core/list', { className: 'wp-block-list' }, [
-						['core/list-item', { content: '<a href="#">Sous menu 01</a>' }],
-						['core/list-item', { content: '<a href="#">Sous-menu 02</a>' }],
-						['core/list-item', { content: '<a href="#">Sous-menu 03</a>' }],
-						['core/list-item', { content: '<a href="#">Sous-menu 04</a>' }]
+			['core/column', { layout: { type: 'default' } }, [
+				['core/heading', { level: 2, content: 'Titre h2' }],
+				['core/columns', { style: { color: { background: '#ffffff00' } } }, [
+					['core/column', {}, [
+						['core/image', {
+							sizeSlug: 'large',
+							url: 'https://placehold.co/600x400/f3f6f7/black/?text=mega%20menu%20image',
+							alt: ''
+						}]
+					]],
+					['core/column', {}, [
+						['core/list', { className: 'wp-block-list' }, [
+							['core/list-item', { content: '<a href="#">Sous menu 01</a>' }],
+							['core/list-item', { content: '<a href="#">Sous-menu 02</a>' }],
+							['core/list-item', { content: '<a href="#">Sous-menu 03</a>' }],
+							['core/list-item', { content: '<a href="#">Sous-menu 04</a>' }]
+						]]
+					]],
+					['core/column', {}, [
+						['core/list', { className: 'wp-block-list' }, [
+							['core/list-item', { content: '<a href="#">Sous menu 01</a>' }],
+							['core/list-item', { content: '<a href="#">Sous-menu 02</a>' }],
+							['core/list-item', { content: '<a href="#">Sous-menu 03</a>' }],
+							['core/list-item', { content: '<a href="#">Sous-menu 04</a>' }]
+						]]
 					]]
 				]]
 			]]
 		]]
-	]]
 ]
 
 /**
@@ -86,72 +87,89 @@ const TEMPLATE = [
  *
  * @return {Element} Element to render.
  */
-export default function Edit({attributes, setAttributes}) {
-	const { menuName, megaMenuWidth, megaMenuLeft, titlePadding, fontSize } = attributes
+export default function Edit({ attributes, setAttributes }) {
+	const { menuName, megaMenuWidth, megaMenuLeft, titlePadding, enableCustomPadding, fontSize } = attributes
 
-    //* useRef is a React Hook that creates a mutable reference that persists across re-renders
-    //* It's like a "box" that can hold a mutable value in its .current property
+	//* useRef is a React Hook that creates a mutable reference that persists across re-renders
+	//* It's like a "box" that can hold a mutable value in its .current property
 
-    //* This ref will store a reference to the editor content element
-    const editorWidthRef = useRef(null)
+	//* This ref will store a reference to the editor content element
+	const editorWidthRef = useRef(null)
 
-    //* This ref will store a reference to our block's DOM element
-    //* We need this to set CSS variables directly on the block
-    const blockRef = useRef(null)
+	//* This ref will store a reference to our block's DOM element
+	//* We need this to set CSS variables directly on the block
+	const blockRef = useRef(null)
 
-    //* useEffect is a React Hook that handles side effects
-    //* It runs after render and when dependencies change (empty array means run once after first render)
-    useEffect(() => {
-        //* Find the editor content area
-        const editorContent = document.querySelector('.interface-interface-skeleton__content')
+	//* Migration: Auto-enable custom padding for blocks that already have titlePadding values
+	//* This ensures backward compatibility with existing blocks
+	useEffect(() => {
+		if (titlePadding && enableCustomPadding === undefined) {
+			// Check if titlePadding has any non-zero values
+			const hasCustomPadding =
+				(titlePadding.top && titlePadding.top !== '0px') ||
+				(titlePadding.right && titlePadding.right !== '0px') ||
+				(titlePadding.bottom && titlePadding.bottom !== '0px') ||
+				(titlePadding.left && titlePadding.left !== '0px')
+
+			if (hasCustomPadding) {
+				setAttributes({ enableCustomPadding: true })
+			}
+		}
+	}, []) //* Empty dependency array = runs once on mount
+
+	//* useEffect is a React Hook that handles side effects
+	//* It runs after render and when dependencies change (empty array means run once after first render)
+	useEffect(() => {
+		//* Find the editor content area
+		const editorContent = document.querySelector('.interface-interface-skeleton__content')
 
 		if (!editorContent) return
 
-        editorWidthRef.current = editorContent
+		editorWidthRef.current = editorContent
 
-        //* Create ResizeObserver
-        const resizeObserver = new ResizeObserver(entries => {
-            for (const entry of entries) {
-                 if (blockRef.current) {
+		//* Create ResizeObserver
+		const resizeObserver = new ResizeObserver(entries => {
+			for (const entry of entries) {
+				if (blockRef.current) {
 					const parentNavContainer = blockRef.current.closest('.wp-block-simple-mega-menu-mega-menu-nav')
-                    // console.log("🚀 ~ resizeObserver ~ parentNavContainer.getBoundingClientRect().left:", parentNavContainer.getBoundingClientRect().left)
+					// console.log("🚀 ~ resizeObserver ~ parentNavContainer.getBoundingClientRect().left:", parentNavContainer.getBoundingClientRect().left)
 
 					//* Set the editor CSS variables
-                    blockRef.current.style.setProperty('--editor-content-left', `-${parentNavContainer.getBoundingClientRect().left}px`)
-                    blockRef.current.style.setProperty('--editor-content-width', `${entry.target.offsetWidth}px`)
-                }
-            }
-        })
+					blockRef.current.style.setProperty('--editor-content-left', `-${parentNavContainer.getBoundingClientRect().left}px`)
+					blockRef.current.style.setProperty('--editor-content-width', `${entry.target.offsetWidth}px`)
+				}
+			}
+		})
 
-        //* Start observing
-        resizeObserver.observe(editorContent)
+		//* Start observing
+		resizeObserver.observe(editorContent)
 
-        //* Cleanup function that runs when component unmounts
-        //* This prevents memory leaks by removing the observer
-        return () => {
-            resizeObserver.disconnect()
-        }
-    }, []) //* Empty dependency array means this effect runs once on mount
+		//* Cleanup function that runs when component unmounts
+		//* This prevents memory leaks by removing the observer
+		return () => {
+			resizeObserver.disconnect()
+		}
+	}, []) //* Empty dependency array means this effect runs once on mount
 
 	const blockProps = useBlockProps({
-    className: `smm-item ${
-        megaMenuWidth === '100vw'
-            ? 'has-viewport-width'
-            : megaMenuWidth === '100%'
-                ? 'has-100percent-width'
-                : megaMenuWidth?.includes('px')
-                    ? 'has-custom-width'
-                    : ''
-    }`,
+		className: `smm-item ${megaMenuWidth === '100vw'
+				? 'has-viewport-width'
+				: megaMenuWidth === '100%'
+					? 'has-100percent-width'
+					: megaMenuWidth?.includes('px')
+						? 'has-custom-width'
+						: ''
+			}`,
 		style: {
 			'--mega-menu-width': megaMenuWidth || '100vw',
 			'--mega-menu-left': megaMenuLeft || '0px'
 		},
-        ref: blockRef //* Attach our ref to the block element
+		ref: blockRef //* Attach our ref to the block element
 	})
 	//* Create a style object for the title padding
+	//* Only apply padding when enableCustomPadding is true
 	const titleStyle = {
-		padding: titlePadding ?
+		padding: (enableCustomPadding && titlePadding) ?
 			`${titlePadding.top || '0'} ${titlePadding.right || '0'} ${titlePadding.bottom || '0'} ${titlePadding.left || '0'}` :
 			undefined,
 		fontSize: fontSize?.size
@@ -162,6 +180,8 @@ export default function Edit({attributes, setAttributes}) {
 			<InspectorControls>
 				<PanelBody title={__('Settings', 'mega-menu-item')}>
 					<ToggleGroupControl
+						__next40pxDefaultSize={true}
+						__nextHasNoMarginBottom={true}
 						label={__('Largeur du Mega Menu', 'mega-menu-item')}
 						value={megaMenuWidth?.includes('px') ? 'custom' : megaMenuWidth === '100%' ? '100percent' : '100vw'}
 						help={megaMenuWidth === '100%' ? __('Ajoutez la classe CSS "smm-item-wrapper-relative" à l\'élément parent de l\'élément de menu pour un habillage correct à 100% de la largeur. Un aperçu réaliste n\'est pas possible dans l\'éditeur.', 'mega-menu-item') : undefined}
@@ -193,6 +213,8 @@ export default function Edit({attributes, setAttributes}) {
 					{megaMenuWidth?.includes('px') && (
 						<>
 							<TextControl
+								__next40pxDefaultSize={true}
+								__nextHasNoMarginBottom={true}
 								type="number"
 								label={__('Largeur en pixels', 'mega-menu-item')}
 								value={parseInt(megaMenuWidth)}
@@ -203,6 +225,8 @@ export default function Edit({attributes, setAttributes}) {
 								min={0}
 							/>
 							<TextControl
+								__next40pxDefaultSize={true}
+								__nextHasNoMarginBottom={true}
 								type="number"
 								label={__('Position sur l\'axe X en pixels', 'mega-menu-item')}
 								value={parseInt(megaMenuLeft)}
@@ -217,80 +241,97 @@ export default function Edit({attributes, setAttributes}) {
 			</InspectorControls>
 			<InspectorControls group="styles">
 				<PanelBody title={__('Typography', 'mega-menu-item')}>
-                    <FontSizePicker
-                        value={fontSize?.size}
-                        onChange={(newFontSize) => {
-                            setAttributes({
-                                fontSize: {
-                                    size: newFontSize
-                                }
-                            })
-                        }}
-                        fontSizes={[
-                            {
-                                name: __('Small', 'mega-menu-item'),
-                                slug: 'small',
-                                size: '0.9rem',
-                            },
-                            {
-                                name: __('Medium', 'mega-menu-item'),
-                                slug: 'medium',
-                                size: '1.05rem',
-                            },
-                            {
-                                name: __('Large', 'mega-menu-item'),
-                                slug: 'large',
-                                size: '1.85rem',
-                            },
-                            {
-                                name: __('Extra Large', 'mega-menu-item'),
-                                slug: 'xl',
-                                size: '2.5rem',
-                            },
-                            {
-                                name: __('Extra Extra Large', 'mega-menu-item'),
-                                slug: 'xxl',
-                                size: '3.27rem',
-                            },
-                        ]}
-                    />
-                </PanelBody>
-				<PanelBody title={__('Dimensions', 'mega-menu-item')}>
-					<BoxControl
-						label={__('Marges internes', 'mega-menu-item')}
-						values={titlePadding}
-						onChange={value => setAttributes({ titlePadding: value })}
-						units={[
-							{ value: 'px', label: 'px', step: 1 },     // Whole numbers for pixels
-							{ value: 'rem', label: 'rem', step: 0.025 }, // Decimals for rem
-							{ value: 'em', label: 'em', step: 0.025 }    // Decimals for em
-						]}
-						allowReset={true}
-						resetValues={{
-							top: '0px',
-							right: '0px',
-							bottom: '0px',
-							left: '0px'
+					<FontSizePicker
+						__next40pxDefaultSize={true}
+						value={fontSize?.size}
+						onChange={(newFontSize) => {
+							setAttributes({
+								fontSize: {
+									size: newFontSize
+								}
+							})
 						}}
+						fontSizes={[
+							{
+								name: __('Small', 'mega-menu-item'),
+								slug: 'small',
+								size: '0.9rem',
+							},
+							{
+								name: __('Medium', 'mega-menu-item'),
+								slug: 'medium',
+								size: '1.05rem',
+							},
+							{
+								name: __('Large', 'mega-menu-item'),
+								slug: 'large',
+								size: '1.85rem',
+							},
+							{
+								name: __('Extra Large', 'mega-menu-item'),
+								slug: 'xl',
+								size: '2.5rem',
+							},
+							{
+								name: __('Extra Extra Large', 'mega-menu-item'),
+								slug: 'xxl',
+								size: '3.27rem',
+							},
+						]}
 					/>
+				</PanelBody>
+				<PanelBody title={__('Dimensions', 'mega-menu-item')}>
+					<ToggleControl
+						__nextHasNoMarginBottom={true}
+						label={__('Activer les marges personnalisées', 'mega-menu-item')}
+						checked={enableCustomPadding}
+						onChange={(value) => {
+							setAttributes({
+								enableCustomPadding: value,
+								titlePadding: value ? titlePadding : undefined
+							})
+						}}
+						help={enableCustomPadding ? __('Les marges personnalisées sont activées', 'mega-menu-item') : __('Activez pour définir des marges personnalisées', 'mega-menu-item')}
+					/>
+					{enableCustomPadding && (
+						<BoxControl
+							__next40pxDefaultSize={true}
+							__nextHasNoMarginBottom={true}
+							label={__('Marges internes', 'mega-menu-item')}
+							values={titlePadding}
+							onChange={value => setAttributes({ titlePadding: value })}
+							units={[
+								{ value: 'px', label: 'px', step: 1 },     // Whole numbers for pixels
+								{ value: 'rem', label: 'rem', step: 0.025 }, // Decimals for rem
+								{ value: 'em', label: 'em', step: 0.025 }    // Decimals for em
+							]}
+							allowReset={true}
+							resetValues={{
+								top: '0px',
+								right: '0px',
+								bottom: '0px',
+								left: '0px'
+							}}
+						/>
+					)}
 				</PanelBody>
 			</InspectorControls>
 			<div {...blockProps}> {/* visible as a li element in the front */}
 				<RichText
-						tagName="div"
-						className="mega-menu-item__title"
-						value={menuName || ''}
-						onChange={(value) => setAttributes({ menuName: value })}
-						placeholder={__('Titre...', 'mega-menu-item')}
-						allowedFormats={[]}
-						multiline={false}
-						keepPlaceholderOnFocus={true}
-						style={titleStyle}
+					tagName="div"
+					className="mega-menu-item__title"
+					value={menuName || ''}
+					onChange={(value) => setAttributes({ menuName: value })}
+					placeholder={__('Titre...', 'mega-menu-item')}
+					allowedFormats={[]}
+					multiline={false}
+					keepPlaceholderOnFocus={true}
+					style={titleStyle}
 				/>
 				<InnerBlocks
 					allowedBlocks={ALLOWED_BLOCKS}
 					template={TEMPLATE}
-					// templateLock="insert"
+				// templateLock="insert"
 				/>
 			</div>
 		</>

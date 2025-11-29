@@ -87,5 +87,5 @@ nav.simple-mega-menu {
 
 //* header positioning hack
 header:has(nav.simple-mega-menu) :where(.wp-block-group.wp-block-group-is-layout-constrained) {
-    position: static !important;
+    position: static;
 }
