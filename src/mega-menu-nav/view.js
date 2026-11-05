@@ -61,8 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if(smmNavs.length > 0) {
         smmNavs.forEach(smmNav => {
 
-            //* Get the header element
-            const header = smmNav.closest('header') || smmNav.querySelector('.site-header') || smmNav.querySelector('#masthead')
+            //* Get the header element (fallback: the nav itself when placed outside a <header>)
+            const header = smmNav.closest('header') || smmNav.querySelector('.site-header') || smmNav.querySelector('#masthead') || smmNav
 
             //* Get the breakpoint value
             const smmNavStyle = getComputedStyle(smmNav)
@@ -74,7 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
             //* Add a resize observer to the header element
             const navResizeObserver = new ResizeObserver(entries => {
                 document.documentElement.style.setProperty('--smm-nav-height', Math.round(entries[0].contentRect.height) + 'px')
-                isCurrentlyMobileView = entries[0].contentRect.width <= parseInt(smmBreakpoint)
+                //* Without a <header>, the nav width is not meaningful: compare the viewport width instead (same as the CSS media query)
+                const observedWidth = header === smmNav ? document.documentElement.clientWidth : entries[0].contentRect.width
+                isCurrentlyMobileView = observedWidth <= parseInt(smmBreakpoint)
 
 				//* Auto-close opened burger menu and mega menu items when changing from mobile to desktop
 				if(isMobileView !== isCurrentlyMobileView) {

@@ -7,9 +7,6 @@
   "category": "design",
   "icon": "menu",
   "description": "A custom navigation block with mega menu functionality.",
-  "ancestor": [
-    "core/template-part"
-  ],
   "attributes": {
     "uniqueId": {
       "type": "string"

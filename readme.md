@@ -35,7 +35,32 @@ Doesn't use jQuery and provides a minimal usage of Javascript to custom CSS vari
 
 Provides minimalistic styles and scripts. Styles and scripts should be added by the user.
 
-Simple Mega Menu Nav block cannot be added outside the header area.
+Simple Mega Menu Nav block is best placed inside a `<header>` element (e.g. the Header template part): the mobile menu positioning relies on it. Outside a `<header>`, the block still works and measures the nav itself instead.
+
+### `--smm-below` CSS variable
+
+Media queries cannot use `var()`, so blocks placed inside the menu cannot reuse the `--mega-menu-breakpoint` value in their own CSS. The nav exposes `--smm-below` instead, inherited by all its descendants:
+
+- `0px` above the breakpoint (desktop view), `1px` at or below it (mobile view);
+- set by the same `@media (max-width: <breakpoint>)` as the mobile menu on the front end, and by the `.is-mobile` class in the editor;
+- registered with `@property` (`<length>`), so it can be tested with a container style query.
+
+Usage in a block placed in the menu (e.g. in a per-block custom CSS field that wraps rules in the block selector):
+
+```css
+@container style(--smm-below: 0px) {
+  &:hover {
+    background-color: white;
+  }
+}
+```
+
+Caveats:
+
+- `style()` reads the value on the parent, never on the element itself: do not set `--smm-below` on the element you style.
+- Inside a nested rule, use `&` (or `&:hover`); a nested `.class` selector would target a descendant.
+- Outside the nav, the variable is always `0px`.
+- Browsers without `@container style()` support for custom properties ignore the whole `@container` block. To keep a sensible default there, write the normal rule and cancel it in `@container style(--smm-below: 1px) { … }`.
 
 
 ## Installation
@@ -92,6 +117,11 @@ Go to your WordPress admin panel (https://www.your-site.com/wp-admin or your loc
 
 
 ## Changelog
+
+### Release 0.1.7
+  - Removed the `core/template-part` ancestor restriction on the Mega Menu Nav block (it can now be inserted when editing a template part in focus mode); without a `<header>` ancestor, the scripts fall back to the nav / viewport instead of failing
+  - Default background of the mega menu item columns is now opaque white
+  - Added the `--smm-below` CSS variable (see Features)
 
 ### Release 0.1.6
   - Fix deprecated `useSetting` hook in favor of `useSettings`

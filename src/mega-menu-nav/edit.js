@@ -115,10 +115,12 @@ export default function Edit({ attributes, setAttributes }) {
         //* Add resize observer effect
         const navElement = blockRef.current
         if (!navElement) return
+        //* Fallback: the canvas document when placed outside a <header> (e.g. template part focus mode),
+        //* so the breakpoint is compared to the viewport width, like the CSS media query
         const header = navElement.closest('header') ||
             navElement.querySelector('.site-header') ||
-            navElement.querySelector('#masthead')
-        if (!header) return
+            navElement.querySelector('#masthead') ||
+            navElement.ownerDocument.documentElement
         const resizeObserver = new ResizeObserver(entries => {
             const breakpointValue = parseInt(megaMenuBreakpoint) || 780
             const isMobileView = entries[0].contentRect.width <= breakpointValue

@@ -115,6 +115,7 @@ nav.simple-mega-menu {
 
 	//* Mobile
 	&.is-mobile {
+		--smm-below: 1px;
 		position: static !important;
 		> .block-editor-inner-blocks {
 			position: static;

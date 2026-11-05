@@ -41,7 +41,7 @@ const TEMPLATE = [
 	['core/columns', {
 		className: 'has-background',
 		style: {
-			color: { background: '#ffffff00' },
+			color: { background: '#ffffff' },
 			spacing: {
 				margin: { top: '0', bottom: '0' },
 				padding: { top: '20px', right: '0', bottom: '20px', left: '0' }

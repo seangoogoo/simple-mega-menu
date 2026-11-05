@@ -5,6 +5,16 @@
  * Replace them with your own styles or remove the file completely.
  */
 
+//* Breakpoint flag for blocks inside the nav: 0px above, 1px below.
+//* Set to 1px by the mobile media query (render_mega_menu_style)
+//* and by .is-mobile in the editor.
+//* Registered so that @container style() compares a computed length.
+@property --smm-below {
+	syntax: "<length>";
+	inherits: true;
+	initial-value: 0px;
+}
+
 nav.simple-mega-menu {
 	position: static;
 	ul.simple-mega-menu__list {
