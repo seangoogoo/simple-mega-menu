@@ -121,6 +121,7 @@ Go to your WordPress admin panel (https://www.your-site.com/wp-admin or your loc
 ### Release 0.1.7
   - Removed the `core/template-part` ancestor restriction on the Mega Menu Nav block (it can now be inserted when editing a template part in focus mode); without a `<header>` ancestor, the scripts fall back to the nav / viewport instead of failing
   - Default background of the mega menu item columns is now opaque white
+  - Mobile breakpoint is now pixels only (unit control); legacy values are normalized when read (`1046` → `1046px`, other units → `780px`) so the media query and the scripts always agree
   - Added the `--smm-below` CSS variable (see Features)
 
 ### Release 0.1.6

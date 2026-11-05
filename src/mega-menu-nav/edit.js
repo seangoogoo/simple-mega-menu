@@ -16,6 +16,7 @@ import {
     __experimentalToolsPanel as ToolsPanel,
     __experimentalToolsPanelItem as ToolsPanelItem,
     __experimentalBoxControl as BoxControl,
+    __experimentalUnitControl as UnitControl,
     RangeControl,
     Button,
     TextControl,
@@ -41,6 +42,7 @@ import {
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import './editor.scss'
+import { normalizeBreakpoint } from './breakpoint'
 
 const ALLOWED_BLOCKS = ['simple-mega-menu/mega-menu-item', 'simple-mega-menu/mega-menu-link', 'core/paragraph', 'core/html', 'core/navigation-link', 'core/buttons', 'core/search', 'core/social-links', 'core/home-link', 'core/site-title', 'core/site-logo', 'core/shortcode']
 const TEMPLATE = [
@@ -65,6 +67,8 @@ const TEMPLATE = [
  */
 export default function Edit({ attributes, setAttributes }) {
     const { uniqueId, blockSpacing, megaMenuBreakpoint, burgerPadding, autoclose } = attributes
+    //* Pixels only (legacy values like "1046" or "48em" are normalized), see breakpoint.js
+    const breakpoint = normalizeBreakpoint(megaMenuBreakpoint)
     const [isCustom, setIsCustom] = useState(false)
     const [customUnit, setCustomUnit] = useState('rem')
     const [isMobile, setIsMobile] = useState(false)
@@ -79,7 +83,7 @@ export default function Edit({ attributes, setAttributes }) {
         'data-autoclose': autoclose,
         style: {
             '--mega-menu-gap': blockSpacing || '0',
-            '--mega-menu-breakpoint': megaMenuBreakpoint || '780px',
+            '--mega-menu-breakpoint': breakpoint,
             '--burger-padding': burgerPadding ?
                 `${burgerPadding.top} ${burgerPadding.right} ${burgerPadding.bottom} ${burgerPadding.left}` :
                 '0',
@@ -122,7 +126,7 @@ export default function Edit({ attributes, setAttributes }) {
             navElement.querySelector('#masthead') ||
             navElement.ownerDocument.documentElement
         const resizeObserver = new ResizeObserver(entries => {
-            const breakpointValue = parseInt(megaMenuBreakpoint) || 780
+            const breakpointValue = parseFloat(breakpoint)
             const isMobileView = entries[0].contentRect.width <= breakpointValue
             setIsMobile(isMobileView)
             // console.log("🚀 navElement:", isMobileView, navElement)
@@ -137,7 +141,7 @@ export default function Edit({ attributes, setAttributes }) {
         return () => {
             resizeObserver.disconnect()
         }
-    }, [megaMenuBreakpoint]) //* Re-run effect when breakpoint changes
+    }, [breakpoint]) //* Re-run effect when breakpoint changes
 
     return (
         <>
@@ -146,13 +150,17 @@ export default function Edit({ attributes, setAttributes }) {
                     title={__('Mega Menu Settings', 'mega-menu-nav')}
                     initialOpen={true}
                 >
-                    <TextControl
+                    <UnitControl
                         __next40pxDefaultSize={true}
-                        __nextHasNoMarginBottom={true}
                         label={__('Seuil Menu mobile', 'mega-menu-nav')}
-                        help={__('La largeur de la fenêtre d\'affichage à laquelle le Mega Menu passe en vue mobile (par exemple 780 px)', 'mega-menu-nav')}
-                        value={megaMenuBreakpoint}
-                        onChange={(value) => setAttributes({ megaMenuBreakpoint: value })}
+                        help={__('La largeur de la fenêtre d\'affichage, en pixels, à laquelle le Mega Menu passe en vue mobile (par exemple 780 px)', 'mega-menu-nav')}
+                        units={[{ value: 'px', label: 'px', default: 780 }]}
+                        min={0}
+                        value={breakpoint}
+                        onChange={(value) => {
+                            //* Ignore the transient empty value while the field is being cleared
+                            if (/^\d/.test(value ?? '')) setAttributes({ megaMenuBreakpoint: normalizeBreakpoint(value) })
+                        }}
                     />
                 </PanelBody>
                 <PanelBody title={__('Custom CSS', 'simple-mega-menu')}>

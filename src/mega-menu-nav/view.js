@@ -19,6 +19,8 @@
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-metadata/#view-script
  */
+import { normalizeBreakpoint } from './breakpoint'
+
 
 
 
@@ -66,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             //* Get the breakpoint value
             const smmNavStyle = getComputedStyle(smmNav)
-            const smmBreakpoint = smmNavStyle.getPropertyValue('--mega-menu-breakpoint').trim()
+            const smmBreakpoint = normalizeBreakpoint(smmNavStyle.getPropertyValue('--mega-menu-breakpoint'))
 			const megaMenuInputs = smmNav.querySelectorAll('input[id^="mega-menu-"]')
 			const burgerInput = smmNav.querySelector('input[id^="burger-input-smm-"]')
             let isMobileView = undefined
@@ -76,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.documentElement.style.setProperty('--smm-nav-height', Math.round(entries[0].contentRect.height) + 'px')
                 //* Without a <header>, the nav width is not meaningful: compare the viewport width instead (same as the CSS media query)
                 const observedWidth = header === smmNav ? document.documentElement.clientWidth : entries[0].contentRect.width
-                isCurrentlyMobileView = observedWidth <= parseInt(smmBreakpoint)
+                isCurrentlyMobileView = observedWidth <= parseFloat(smmBreakpoint)
 
 				//* Auto-close opened burger menu and mega menu items when changing from mobile to desktop
 				if(isMobileView !== isCurrentlyMobileView) {

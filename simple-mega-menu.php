@@ -19,6 +19,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Normalizes the mobile breakpoint to pixels, so the media query and the JS width checks agree.
+ * "1046" or "1046px" → "1046px"; anything else (em, rem, empty…) → "780px".
+ * Mirrors normalizeBreakpoint() in src/mega-menu-nav/breakpoint.js.
+ */
+function simple_mega_menu_sanitize_breakpoint($value) {
+	if (preg_match('/^(\d+(?:\.\d+)?)(px)?$/i', trim((string) $value), $matches)) {
+		return $matches[1] . 'px';
+	}
+	return '780px';
+}
+
+/**
  * Render the mega menu navigation and its associated dynamic styles
  *
  * @param array    $attributes Block attributes.
@@ -26,8 +38,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function render_mega_menu_style($attributes) {
 
-	//* Get the breakpoint value or fallback to default
-	$breakpoint = isset($attributes['megaMenuBreakpoint']) ? $attributes['megaMenuBreakpoint'] : '780px';
+	//* Get the breakpoint value (pixels only) or fallback to default
+	$breakpoint = simple_mega_menu_sanitize_breakpoint( isset($attributes['megaMenuBreakpoint']) ? $attributes['megaMenuBreakpoint'] : '' );
 
 	//* Generate the dynamic CSS
 	$safe_breakpoint = esc_attr($breakpoint);
