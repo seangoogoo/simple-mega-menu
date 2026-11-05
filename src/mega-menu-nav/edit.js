@@ -153,7 +153,7 @@ export default function Edit({ attributes, setAttributes }) {
                     <UnitControl
                         __next40pxDefaultSize={true}
                         label={__('Seuil Menu mobile', 'mega-menu-nav')}
-                        help={__('La largeur de la fenêtre d\'affichage, en pixels, à laquelle le Mega Menu passe en vue mobile (par exemple 780 px)', 'mega-menu-nav')}
+                        help={__('La largeur de la fenêtre d\'affichage, en pixels, à laquelle le Mega Menu passe en vue mobile (par exemple 780 px). Les blocs du menu peuvent tester ce seuil en CSS : @container style(--smm-below: 1px) { & { … } } (mobile) ou 0px (bureau).', 'mega-menu-nav')}
                         units={[{ value: 'px', label: 'px', default: 780 }]}
                         min={0}
                         value={breakpoint}

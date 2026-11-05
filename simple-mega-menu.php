@@ -125,6 +125,8 @@ function render_mega_menu_style($attributes) {
 
 			/* Mobile */
 			@media (max-width: %1$s) {
+				/* --smm-below: 1px below the breakpoint (0px default via @property in style.scss).
+				   Keep in sync with nav.is-mobile in editor.scss. Usage: see readme. */
 				#%2$s {
 					--smm-below: 1px;
 				}

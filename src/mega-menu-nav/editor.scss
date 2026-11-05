@@ -115,6 +115,8 @@ nav.simple-mega-menu {
 
 	//* Mobile
 	&.is-mobile {
+		//* --smm-below: 1px below the breakpoint (0px default via @property in style.scss).
+		//* Keep in sync with the mobile media query in render_mega_menu_style(). Usage: see readme.
 		--smm-below: 1px;
 		position: static !important;
 		> .block-editor-inner-blocks {
