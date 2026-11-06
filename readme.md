@@ -118,42 +118,19 @@ Go to your WordPress admin panel (https://www.your-site.com/wp-admin or your loc
 
 ## Changelog
 
-### Release 0.1.7
-  - Removed the `core/template-part` ancestor restriction on the Mega Menu Nav block (it can now be inserted when editing a template part in focus mode); without a `<header>` ancestor, the scripts fall back to the nav / viewport instead of failing
-  - Default background of the mega menu item columns is now opaque white
-  - Mobile breakpoint is now pixels only (unit control); legacy values are normalized when read (`1046` → `1046px`, other units → `780px`) so the media query and the scripts always agree
-  - Added the `--smm-below` CSS variable (see Features)
+See [CHANGELOG.md](CHANGELOG.md).
 
-### Release 0.1.6
-  - Fix deprecated `useSetting` hook in favor of `useSettings`
-  - Opt-in for future default props on `TextControl`, `ToggleControl`, `RangeControl`, `BaseControl`, `BoxControl`, `SelectControl`, `FontSizePicker`, and `ToggleGroupControl` to resolve deprecation warnings
-  - Implemented conditional custom padding for `mega-menu-item` with new `enableCustomPadding` attribute
-  - Updated `mega-menu-link` styles to use flexbox for better alignment and removed default padding/hover effects
-  - Removed `!important` from `position: static` rule in `mega-menu-nav` styles for better compatibility
+## Releasing
 
-### Release 0.1.5
-  - Enhanced arrow icon color picker to display theme preset color palette for consistent theme integration
+1. While working, add entries under `## [Unreleased]` in `CHANGELOG.md` (Added / Changed / Fixed / Removed) and commit them with the code.
+2. On a clean `main`, run `npm version patch` (fixes) or `npm version minor` (features):
+   - `preversion` refuses to release when `[Unreleased]` has no entry;
+   - `version` copies the version to the plugin header and every `block.json`, dates the changelog section, rebuilds, and adds the files to the release commit;
+   - `postversion` pushes the commit and the `vX.Y.Z` tag.
+3. The GitHub workflow `.github/workflows/release.yml` builds `simple-mega-menu.zip` and publishes the GitHub release, with the changelog section as release notes.
 
-### Release 0.1.4
-  - Added new mega-menu-link block for creating custom navigation links within mega menu items
-  - Implemented compact, inline editor UI for mega-menu-link with minimal visual footprint
-  - Integrated WordPress LinkControl component for easy page/post selection and URL management
-  - Added comprehensive Inspector Controls for link settings (URL, text, target, rel, title attributes)
-  - Optimized editor experience with streamlined interface (removed redundant URL preview, compact icon button)
-  - Support for 'core/paragraph' and 'core/html' blocks within mega-menu-nav
+Sites running the plugin see the update in the Plugins page (Dashboard → Updates → Check again shows it immediately). Update checks are disabled in git working copies (a `.git` folder in the plugin directory), so a dashboard update never overwrites a development clone.
 
-### Release 0.1.3
-  - Fix block not loading in the editor while plugin loaded in a theme that is not a child theme
-  - Fix deprecated use of mb_convert_encoding() function
-
-### Release 0.1.2
-  - Added support for 100% width mega menu items relative to a parent element using the 'relative' property
-
-### Release 0.1.1
-  - Right arrow icon for Mega Menu buttons arrow
-  - Added support for 'core/shortcode'
-  - Provide option to auto-close other mega menu items when one is open on mobile menu
-  - Auto-close opened burger menu and mega menu items when changing from mobile to desktop
 
 ## To Do
 
