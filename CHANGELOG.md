@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-06
+
 ### Added
 - Updates from GitHub releases in the WordPress dashboard (Plugins page, "View details" with the changelog)
 - Automated release process: `npm version` syncs the version in the plugin header and `block.json` files, a GitHub workflow publishes the plugin zip
