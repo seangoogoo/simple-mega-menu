@@ -9,6 +9,7 @@
  * Author URI:        https://www.jensen.siu.net
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * Update URI:        https://github.com/seangoogoo/simple-mega-menu
  * Text Domain:       simple-mega-menu
  *
  * @package           SimpleMegaMenu
@@ -16,6 +17,12 @@
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
+}
+
+//* Updates from GitHub releases; disabled in git working copies so a dashboard update never overwrites a clone
+if ( ! is_dir( __DIR__ . '/.git' ) ) {
+	require_once __DIR__ . '/includes/class-simple-mega-menu-updater.php';
+	new Simple_Mega_Menu_Updater( __FILE__ );
 }
 
 /**
