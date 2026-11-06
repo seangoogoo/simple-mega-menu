@@ -92,16 +92,22 @@ class Simple_Mega_Menu_Updater {
 			$html,
 			1
 		);
+		if ( null === $html ) {
+			return $fallback;
+		}
 
-		//* Drop the empty "[Unreleased]" section, up to the next h2 heading wrapper.
+		//* Drop the "[Unreleased]" section only if it is empty (nothing but whitespace before the next heading).
 		$html = preg_replace(
-			'#<div class="markdown-heading"[^>]*>\s*<h2[^>]*>\[Unreleased\]</h2>.*?(?=<div class="markdown-heading"[^>]*>\s*<h2)#s',
+			'#<div class="markdown-heading"[^>]*>\s*<h2[^>]*>\[Unreleased\]</h2>.*?</div>\s*(?=<div class="markdown-heading"[^>]*>\s*<h2|</article>)#s',
 			'',
 			$html,
 			1
 		);
+		if ( null === $html ) {
+			return $fallback;
+		}
 
-		return null === $html ? $fallback : $html;
+		return $html;
 	}
 
 	public function check_update( $update, $plugin_data, $plugin_file ) {
