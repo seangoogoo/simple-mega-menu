@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-06
+
 ### Changed
 - "View details" shows the full changelog of the offered version, not only the latest release notes
 - "View details" description highlights the main features
