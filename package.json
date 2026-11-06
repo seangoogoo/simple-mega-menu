@@ -6,6 +6,9 @@
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",
 	"scripts": {
+		"preversion": "node bin/release.mjs check",
+		"version": "node bin/release.mjs sync && npm run build && git add simple-mega-menu.php CHANGELOG.md src build",
+		"postversion": "git push --follow-tags",
 		"build": "wp-scripts build --webpack-copy-php",
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style",
