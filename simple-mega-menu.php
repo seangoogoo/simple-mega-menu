@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 //* Updates from GitHub releases; disabled in git working copies so a dashboard update never overwrites a clone
-if ( ! is_dir( __DIR__ . '/.git' ) ) {
+if ( ! file_exists( __DIR__ . '/.git' ) ) {
 	require_once __DIR__ . '/includes/class-simple-mega-menu-updater.php';
 	new Simple_Mega_Menu_Updater( __FILE__ );
 }

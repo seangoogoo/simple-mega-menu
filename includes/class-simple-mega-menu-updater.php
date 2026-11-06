@@ -46,8 +46,13 @@ class Simple_Mega_Menu_Updater {
 		if ( 200 === wp_remote_retrieve_response_code( $response ) && ! empty( $data['assets'] ) ) {
 			foreach ( $data['assets'] as $asset ) {
 				if ( self::ASSET === $asset['name'] ) {
+					$version = ltrim( (string) $data['tag_name'], 'v' );
+					$prefix  = 'https://github.com/' . self::REPO . '/releases/download/';
+					if ( ! preg_match( '/^\d+\.\d+\.\d+$/', $version ) || 0 !== strpos( $asset['browser_download_url'], $prefix ) ) {
+						break;
+					}
 					$release = array(
-						'version'   => ltrim( $data['tag_name'], 'v' ),
+						'version'   => $version,
 						'package'   => $asset['browser_download_url'],
 						'url'       => $data['html_url'],
 						'changelog' => isset( $data['body_html'] ) ? $data['body_html'] : '',
@@ -91,6 +96,7 @@ class Simple_Mega_Menu_Updater {
 		return (object) array(
 			'name'          => $plugin['Name'],
 			'slug'          => self::SLUG,
+			'external'      => true,
 			'version'       => $release['version'],
 			'author'        => $plugin['Author'],
 			'homepage'      => 'https://github.com/' . self::REPO,

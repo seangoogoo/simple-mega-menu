@@ -44,7 +44,7 @@ if ( mode === 'check' ) {
 			replaceOrFail( file, /("version":\s*")[^"]*"/, ( _, prefix ) => `${ prefix }${ version }"` )
 		}
 	}
-	const today = new Date().toISOString().slice( 0, 10 )
+	const today = new Date().toLocaleDateString( 'en-CA' )
 	writeFileSync( CHANGELOG, changelog.replace( '## [Unreleased]', `## [Unreleased]\n\n## [${ version }] - ${ today }` ) )
 } else if ( mode === 'notes' ) {
 	const notes = section( changelog, arg )

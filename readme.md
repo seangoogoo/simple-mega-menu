@@ -129,6 +129,8 @@ See [CHANGELOG.md](CHANGELOG.md).
    - `postversion` pushes the commit and the `vX.Y.Z` tag.
 3. The GitHub workflow `.github/workflows/release.yml` builds `simple-mega-menu.zip` and publishes the GitHub release, with the changelog section as release notes.
 
+If the push fails, run `git push --follow-tags` manually. If the version step fails, run `git checkout -- .` before retrying.
+
 Sites running the plugin see the update in the Plugins page (Dashboard → Updates → Check again shows it immediately). Update checks are disabled in git working copies (a `.git` folder in the plugin directory), so a dashboard update never overwrites a development clone.
 
 
