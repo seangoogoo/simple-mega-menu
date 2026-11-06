@@ -13,7 +13,7 @@ It is in an experimental state and has been tested with Twenty Twenty-Four and T
 
 - WordPress 6.6 or later.
 - PHP 7.2 or later.
-- Modern browsers only: the front end relies on `:has()`, `@property`, `100dvh` and `@container style()`. No IE or legacy browser support.
+- Modern browsers only: the front end relies on `:has()`, `@property` and `100dvh`; testing `--smm-below` additionally requires `@container style()`. No IE or legacy browser support.
 
 
 ## Features
@@ -51,7 +51,7 @@ Simple Mega Menu Nav block is best placed inside a `<header>` element (e.g. the 
 
 - Mobile breakpoint (px).
 - Custom desktop/mobile CSS file paths.
-- Arrow icon size, thickness and color (defaults to the theme's text color when left empty).
+- Arrow icon size, thickness and color (defaults to the theme's `contrast` preset color, or `grey` if undefined, when left empty).
 - Auto-close other open items when opening one in mobile view.
 - Burger menu padding.
 - Spacing between first-level items.
@@ -66,7 +66,7 @@ Simple Mega Menu Nav block is best placed inside a `<header>` element (e.g. the 
 
 **Mega Menu Link**
 
-- URL, label, "open in new tab", `rel` and `title`, set through the native Link Control.
+- URL, label, "open in new tab", `rel` and `title`, set in the block's Link Settings sidebar panel (URL and "open in new tab" also via the Link Control popover).
 - Color (background/text), typography (font size, line height) and spacing (padding, margin) supports.
 
 
@@ -131,7 +131,7 @@ For users who want to style the menu themselves, the nav and its items set the f
 2. In your WordPress admin, go to Plugins → Add New Plugin → Upload Plugin, select the zip file, then click Install Now.
 3. Activate **Simple Mega Menu**.
 
-Once installed this way, updates appear on the Plugins page like any other plugin (Dashboard → Updates → Check again to check immediately). "View details" on the Plugins page shows the full changelog; release information is cached for 12 hours server-side unless "Check again" is used.
+Once installed this way, updates appear on the Plugins page like any other plugin (Dashboard → Updates → Check again to check immediately). "View details" on the Plugins page shows the full changelog; release information is cached for 12 hours (1 hour after a failed check) unless "Check again" is used.
 
 ### For development
 
@@ -186,9 +186,9 @@ Sites running the plugin see the update in the Plugins page (Dashboard → Updat
 
 ## Known limitations
 
-- Some editor UI strings are hard-coded in French, and several blocks use inconsistent text domains (`mega-menu-nav`, `mega-menu-item`) instead of the declared `simple-mega-menu`.
+- Some editor UI strings are hard-coded in French, and the Mega Menu nav (partly) and Mega Menu Item blocks use `mega-menu-nav` / `mega-menu-item` text domains instead of the declared `simple-mega-menu`.
 - No ARIA attributes on the burger button or the mega menu item toggles.
-- Relies on modern CSS (`:has()`, `@container style()`): no fallback for older browsers.
+- Relies on modern CSS (`:has()`, `@property`, `100dvh`; `@container style()` for `--smm-below`): no fallback for older browsers.
 
 
 ## To Do
