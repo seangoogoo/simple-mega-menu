@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+- "View details" shows the full changelog of the offered version, not only the latest release notes
+- "View details" description highlights the main features
+
 ## [0.2.0] - 2026-11-06
 
 ### Added
@@ -18,7 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [0.1.7] - 2026-11-05
 
 ### Added
-- `--smm-below` CSS variable: `0px` above the mobile breakpoint, `1px` at or below it, readable from any block inside the nav with `@container style()`
+- `--smm-below` CSS variable on the nav: `0px` above the mobile breakpoint, `1px` at or below it. Your own CSS (HTML block, Additional CSS, theme stylesheets) can follow the plugin breakpoint with `@container style(--smm-below: 1px) { … }`, without duplicating the media query
 
 ### Changed
 - Mobile breakpoint is pixels only (unit control); legacy values are normalized when read (`1046` → `1046px`, other units → `780px`)

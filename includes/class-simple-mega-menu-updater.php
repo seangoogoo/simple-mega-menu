@@ -63,8 +63,45 @@ class Simple_Mega_Menu_Updater {
 			}
 		}
 
+		if ( $release ) {
+			$release['changelog'] = $this->get_changelog_html( $data['tag_name'], $release['changelog'] );
+		}
+
 		set_site_transient( self::CACHE_KEY, $release ? $release : 0, $release ? 12 * HOUR_IN_SECONDS : HOUR_IN_SECONDS );
 		return $release;
+	}
+
+	//* Full CHANGELOG.md of the release, rendered to HTML by GitHub; falls back to the release notes on failure.
+	private function get_changelog_html( $tag_name, $fallback ) {
+		$response = wp_remote_get(
+			'https://api.github.com/repos/' . self::REPO . '/contents/CHANGELOG.md?ref=' . rawurlencode( $tag_name ),
+			array(
+				'timeout' => 10,
+				'headers' => array( 'Accept' => 'application/vnd.github.html' ),
+			)
+		);
+		if ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
+			return $fallback;
+		}
+		$html = wp_remote_retrieve_body( $response );
+
+		//* Drop the leading "Changelog" heading and its intro paragraph.
+		$html = preg_replace(
+			'#^.*?<div class="markdown-heading"[^>]*>\s*<h1[^>]*>.*?</h1>.*?</div>\s*<p[^>]*>.*?</p>\s*#s',
+			'',
+			$html,
+			1
+		);
+
+		//* Drop the empty "[Unreleased]" section, up to the next h2 heading wrapper.
+		$html = preg_replace(
+			'#<div class="markdown-heading"[^>]*>\s*<h2[^>]*>\[Unreleased\]</h2>.*?(?=<div class="markdown-heading"[^>]*>\s*<h2)#s',
+			'',
+			$html,
+			1
+		);
+
+		return null === $html ? $fallback : $html;
 	}
 
 	public function check_update( $update, $plugin_data, $plugin_file ) {
@@ -92,7 +129,14 @@ class Simple_Mega_Menu_Updater {
 		if ( ! $release ) {
 			return $result;
 		}
-		$plugin = get_plugin_data( WP_PLUGIN_DIR . '/' . $this->plugin_file, false, false );
+		$plugin   = get_plugin_data( WP_PLUGIN_DIR . '/' . $this->plugin_file, false, false );
+		$features = '<p><strong>Key features</strong></p><ul>'
+			. '<li>Mega menu items with a configurable mobile breakpoint</li>'
+			. '<li><code>mega-menu-link</code> block for custom navigation links inside mega menu items</li>'
+			. '<li><code>--smm-below</code> CSS variable on the nav: <code>0px</code> above the mobile breakpoint, <code>1px</code> at or below it. '
+			. 'Your own CSS (HTML block, Additional CSS, theme stylesheets) can follow the plugin breakpoint with '
+			. '<code>@container style(--smm-below: 1px) { &#8230; }</code>, without duplicating the media query</li>'
+			. '</ul>';
 		return (object) array(
 			'name'          => $plugin['Name'],
 			'slug'          => self::SLUG,
@@ -105,7 +149,7 @@ class Simple_Mega_Menu_Updater {
 			'last_updated'  => $release['date'],
 			'download_link' => $release['package'],
 			'sections'      => array(
-				'description' => esc_html( $plugin['Description'] ),
+				'description' => '<p>' . esc_html( $plugin['Description'] ) . '</p>' . $features,
 				'changelog'   => $release['changelog']
 					. '<p><a href="' . esc_url( 'https://github.com/' . self::REPO . '/blob/main/CHANGELOG.md' ) . '">Full changelog</a></p>',
 			),
