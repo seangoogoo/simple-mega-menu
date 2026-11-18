@@ -131,7 +131,7 @@ For users who want to style the menu themselves, the nav and its items set the f
 2. In your WordPress admin, go to Plugins → Add New Plugin → Upload Plugin, select the zip file, then click Install Now.
 3. Activate **Simple Mega Menu**.
 
-Once installed this way, updates appear on the Plugins page like any other plugin (Dashboard → Updates → Check again to check immediately). "View details" on the Plugins page shows the full changelog; release information is cached for 12 hours (1 hour after a failed check) unless "Check again" is used.
+Once installed this way, updates appear on the Plugins page like any other plugin (Dashboard → Updates → Check again to check immediately). "View details" on the Plugins page shows the full changelog of the latest release. Each update check and each "View details" asks GitHub whether the release changed (conditional request, no API quota used when it hasn't), so a new release and its changelog show up at once; after a failed check, GitHub is left alone for 1 hour.
 
 ### For development
 

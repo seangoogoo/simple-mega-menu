@@ -14,7 +14,7 @@ class Simple_Mega_Menu_Updater {
 	const REPO      = 'seangoogoo/simple-mega-menu';
 	const SLUG      = 'simple-mega-menu';
 	const ASSET     = 'simple-mega-menu.zip';
-	const CACHE_KEY = 'simple_mega_menu_latest_release';
+	const CACHE_KEY = 'simple_mega_menu_release';
 
 	/** @var string Plugin basename, e.g. "simple-mega-menu/simple-mega-menu.php". */
 	private $plugin_file;
@@ -25,25 +25,50 @@ class Simple_Mega_Menu_Updater {
 		add_filter( 'plugins_api', array( $this, 'plugin_info' ), 10, 3 );
 	}
 
-	//* Latest GitHub release with a plugin zip, cached 12 h (1 h after a failure).
-	//* "Check again" on Dashboard → Updates (force-check) bypasses the cache.
+	//* Latest GitHub release with a plugin zip. Revalidated on every update check and
+	//* every "View details" with the cached ETag: an unchanged release answers 304, which
+	//* costs no API quota and reuses the cache, so a new release (and its changelog) shows
+	//* up at once. After a failure, the last known release is kept and GitHub is left
+	//* alone for 1 h.
 	private function get_release() {
-		$cached = get_site_transient( self::CACHE_KEY );
-		if ( false !== $cached && empty( $_GET['force-check'] ) ) {
-			return $cached ? $cached : null;
+		$cache = get_site_transient( self::CACHE_KEY );
+		if ( ! is_array( $cache ) ) {
+			$cache = array(
+				'etag'    => '',
+				'release' => null,
+				'retry'   => 0,
+			);
+		}
+		if ( $cache['retry'] > time() ) {
+			return $cache['release'];
 		}
 
+		$headers = array( 'Accept' => 'application/vnd.github.html+json' );
+		if ( $cache['etag'] ) {
+			$headers['If-None-Match'] = $cache['etag'];
+		}
 		$response = wp_remote_get(
 			'https://api.github.com/repos/' . self::REPO . '/releases/latest',
 			array(
 				'timeout' => 10,
-				'headers' => array( 'Accept' => 'application/vnd.github.html+json' ),
+				'headers' => $headers,
 			)
 		);
+		$code = wp_remote_retrieve_response_code( $response );
+
+		if ( 304 === $code ) {
+			return $cache['release'];
+		}
+		if ( 200 !== $code ) {
+			$cache['retry'] = time() + HOUR_IN_SECONDS;
+			set_site_transient( self::CACHE_KEY, $cache );
+			return $cache['release'];
+		}
+
 		$data    = json_decode( wp_remote_retrieve_body( $response ), true );
 		$release = null;
 
-		if ( 200 === wp_remote_retrieve_response_code( $response ) && ! empty( $data['assets'] ) ) {
+		if ( ! empty( $data['assets'] ) ) {
 			foreach ( $data['assets'] as $asset ) {
 				if ( self::ASSET === $asset['name'] ) {
 					$version = ltrim( (string) $data['tag_name'], 'v' );
@@ -67,7 +92,14 @@ class Simple_Mega_Menu_Updater {
 			$release['changelog'] = $this->get_changelog_html( $data['tag_name'], $release['changelog'] );
 		}
 
-		set_site_transient( self::CACHE_KEY, $release ? $release : 0, $release ? 12 * HOUR_IN_SECONDS : HOUR_IN_SECONDS );
+		set_site_transient(
+			self::CACHE_KEY,
+			array(
+				'etag'    => (string) wp_remote_retrieve_header( $response, 'etag' ),
+				'release' => $release,
+				'retry'   => 0,
+			)
+		);
 		return $release;
 	}
 
