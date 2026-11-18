@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-11-18
+
 ### Fixed
 - "View details" kept showing an older version and changelog for up to 12 hours after a new release (cached release information). The release is now revalidated with GitHub on every update check and every "View details" (conditional request: no API quota used when nothing changed), under a new cache key, so the stale cache is ignored right after updating.
 
